@@ -10,23 +10,14 @@ import SwiftData
 
 @main
 struct GreenBeanApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    
+    @AppStorage("darkMode") private var darkMode = false
 
     var body: some Scene {
         WindowGroup {
             ContentView()
+            // Change the color mode of the entire app to Dark or Light
+            .preferredColorScheme(darkMode ? .dark : .light)
         }
-        .modelContainer(sharedModelContainer)
     }
 }
