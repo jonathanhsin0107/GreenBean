@@ -19,7 +19,7 @@ public func createDatabase() {
     
     do {
         // Create a database container to manage the Businesses
-        modelContainer = try ModelContainer(for: Stores.self, Product.self)
+        modelContainer = try ModelContainer(for: Product.self)
     } catch {
         fatalError("Unable to create ModelContainer")
     }
@@ -32,17 +32,17 @@ public func createDatabase() {
      |   Check to see if the database has already been created or not   |
      --------------------------------------------------------------------
      */
-    let storesFetchDescriptor = FetchDescriptor<Restaurant>()
-    var listOfAllStoresInDatabase = [Restaurant]()
+    let productsFetchDescriptor = FetchDescriptor<Product>()
+    var listOfAllProductsInDatabase = [Product]()
     
     do {
         // Obtain all of the Business objects from the database
-        listOfAllStoresInDatabase = try modelContext.fetch(storesFetchDescriptor)
+        listOfAllProductsInDatabase = try modelContext.fetch(productsFetchDescriptor)
     } catch {
         fatalError("Unable to fetch Store objects from the database")
     }
     
-    if !listOfAllStoresInDatabase.isEmpty {
+    if !listOfAllProductsInDatabase.isEmpty {
         print("Database has already been created!")
         return
     }
@@ -63,48 +63,9 @@ public func createDatabase() {
      ***********************************************************
      */
     var productStructList = [ProductStruct]()
-    productStructList = decodeJsonFileIntoArrayOfStructs(fullFilename: "InitialContent.json", fileLocation: "Database")
+    productStructList = decodeJsonFileIntoArrayOfStructs(fullFilename: "InitialContent.json", fileLocation: "Main Bundle")
     
     for aProduct in productStructList {
-        // Example userImageName = "2A9B8E84-429E-44DC-A6BA-4793558D1180.jpg"
-        let filenameComponents = aProduct.userImageName.components(separatedBy: ".")
-        
-        // filenameComponents[0] = "2A9B8E84-429E-44DC-A6BA-4793558D1180"
-        // filenameComponents[1] = "jpg"
-        
-        // Copy the photo file from Assets.xcassets to document directory.
-        // The function is given in UtilityFunctions.swift
-        copyImageFileFromAssetsToDocumentDirectory(filename: filenameComponents[0], fileExtension: filenameComponents[1])
-        
-        // Example audioNoteFilename = "BDB2D176-D39C-4F22-976E-F525F15C0936.m4a"
-        let filenameComponents2 = aProduct.audioNoteFilename.components(separatedBy: ".")
-        
-        // filenameComponents[0] = "BDB2D176-D39C-4F22-976E-F525F15C0936"
-        // filenameComponents[1] = "m4a"
-        
-        // Copy the audio file from project folder (main bundle) to document directory
-        // The function is given in UtilityFunctions.swift
-        copyFileFromMainBundleToDocumentDirectory(filename: filenameComponents2[0], fileExtension: filenameComponents2[1])
-        
-        // Example userVideoName = "ED286A58-689E-4B65-90B7-BF7EE65E0CD1.mp4"
-        let filenameComponents3 = aProduct.userVideoName.components(separatedBy: ".")
-        
-        // filenameComponents[0] = "ED286A58-689E-4B65-90B7-BF7EE65E0CD1"
-        // filenameComponents[1] = "mp4"
-        
-        // Copy the audio file from project folder (main bundle) to document directory
-        // The function is given in UtilityFunctions.swift
-        copyFileFromMainBundleToDocumentDirectory(filename: filenameComponents3[0], fileExtension: filenameComponents3[1])
-        
-        // Example photoFilename = "stanley.jpg"
-        let filenameComponents4 = aProduct.photoFilename.components(separatedBy: ".")
-        
-        // filenameComponents[0] = "stanley"
-        // filenameComponents[1] = "jpg"
-        
-        // Copy the photo file from Assets.xcassets to document directory.
-        // The function is given in UtilityFunctions.swift
-        copyImageFileFromAssetsToDocumentDirectory(filename: filenameComponents4[0], fileExtension: filenameComponents4[1])
         // Instantiate a new Business object and dress it up
         let newProduct = Product(
             productName: aProduct.productName,
