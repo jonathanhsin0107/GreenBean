@@ -19,7 +19,7 @@ public func createDatabase() {
     
     do {
         // Create a database container to manage the Businesses
-        modelContainer = try ModelContainer(for: Restaurant.self, Car.self, Product.self, City.self)
+        modelContainer = try ModelContainer(for: Stores.self, Product.self)
     } catch {
         fatalError("Unable to create ModelContainer")
     }
@@ -32,17 +32,17 @@ public func createDatabase() {
      |   Check to see if the database has already been created or not   |
      --------------------------------------------------------------------
      */
-    let restaurantFetchDescriptor = FetchDescriptor<Restaurant>()
-    var listOfAllRestaurantsInDatabase = [Restaurant]()
+    let storesFetchDescriptor = FetchDescriptor<Restaurant>()
+    var listOfAllStoresInDatabase = [Restaurant]()
     
     do {
         // Obtain all of the Business objects from the database
-        listOfAllRestaurantsInDatabase = try modelContext.fetch(restaurantFetchDescriptor)
+        listOfAllStoresInDatabase = try modelContext.fetch(storesFetchDescriptor)
     } catch {
-        fatalError("Unable to fetch Restaurant objects from the database")
+        fatalError("Unable to fetch Store objects from the database")
     }
     
-    if !listOfAllRestaurantsInDatabase.isEmpty {
+    if !listOfAllStoresInDatabase.isEmpty {
         print("Database has already been created!")
         return
     }
@@ -62,12 +62,12 @@ public func createDatabase() {
      *   Create and Populate the Restaurants in the Database   *
      ***********************************************************
      */
-    var restaurantStructList = [RestaurantStruct]()
-    restaurantStructList = decodeJsonFileIntoArrayOfStructs(fullFilename: "RestaurantInitialContent.json", fileLocation: "Main Bundle")
+    var storeStructList = [StoreStruct]()
+    storeStructList = decodeJsonFileIntoArrayOfStructs(fullFilename: "InitialContent.json", fileLocation: "Database")
 
-    for aRestaurant in restaurantStructList {
+    for aStore in storeStructList {
         // Example userImageName = "2A9B8E84-429E-44DC-A6BA-4793558D1180.jpg"
-        let filenameComponents = aRestaurant.userImageName.components(separatedBy: ".")
+        let filenameComponents = aStore.userImageName.components(separatedBy: ".")
         
         // filenameComponents[0] = "2A9B8E84-429E-44DC-A6BA-4793558D1180"
         // filenameComponents[1] = "jpg"
@@ -77,7 +77,7 @@ public func createDatabase() {
         copyImageFileFromAssetsToDocumentDirectory(filename: filenameComponents[0], fileExtension: filenameComponents[1])
         
         // Example audioNoteFilename = "BDB2D176-D39C-4F22-976E-F525F15C0936.m4a"
-        let filenameComponents2 = aRestaurant.audioNoteFilename.components(separatedBy: ".")
+        let filenameComponents2 = aStore.audioNoteFilename.components(separatedBy: ".")
         
         // filenameComponents[0] = "BDB2D176-D39C-4F22-976E-F525F15C0936"
         // filenameComponents[1] = "m4a"
@@ -87,7 +87,7 @@ public func createDatabase() {
         copyFileFromMainBundleToDocumentDirectory(filename: filenameComponents2[0], fileExtension: filenameComponents2[1])
         
         // Example userVideoName = "ED286A58-689E-4B65-90B7-BF7EE65E0CD1.mp4"
-        let filenameComponents3 = aRestaurant.userVideoName.components(separatedBy: ".")
+        let filenameComponents3 = aStore.userVideoName.components(separatedBy: ".")
         
         // filenameComponents[0] = "ED286A58-689E-4B65-90B7-BF7EE65E0CD1"
         // filenameComponents[1] = "mp4"
@@ -97,32 +97,23 @@ public func createDatabase() {
         copyFileFromMainBundleToDocumentDirectory(filename: filenameComponents3[0], fileExtension: filenameComponents3[1])
         
         // Instantiate a new Business object and dress it up
-        let newRestaurant = Restaurant(
-            name: aRestaurant.name,
-            imageUrl: aRestaurant.imageUrl,
-            rating: aRestaurant.rating,
-            reviewCount: aRestaurant.reviewCount,
-            phone: aRestaurant.phone,
-            websiteUrl: aRestaurant.websiteUrl,
-            address1: aRestaurant.address1,
-            address2: aRestaurant.address2,
-            address3: aRestaurant.address3,
-            city: aRestaurant.city,
-            state: aRestaurant.state,
-            zipCode: aRestaurant.zipCode,
-            country: aRestaurant.country,
-            latitude: aRestaurant.latitude,
-            longitude: aRestaurant.longitude,
-            isReview: aRestaurant.isReview,
-            userRating: aRestaurant.userRating,
-            textReview: aRestaurant.textReview,
-            userImageName: aRestaurant.userImageName,
-            userVideoName: aRestaurant.userVideoName,
-            audioNoteFilename: aRestaurant.audioNoteFilename,
-            speechToText: aRestaurant.speechToText)
+        let newStore = Store(
+            name: aStore.name,
+            imageUrl: aStore.imageUrl,
+            phone: aStore.phone,
+            websiteUrl: aStore.websiteUrl,
+            address1: aStore.address1,
+            address2: aStore.address2,
+            address3: aStore.address3,
+            city: aStore.city,
+            state: aStore.state,
+            zipCode: aStore.zipCode,
+            country: aStore.country,
+            latitude: aStore.latitude,
+            longitude: aStore.longitude,
         
         // Insert the new Business object into the database
-        modelContext.insert(newRestaurant)
+        modelContext.insert(newStore)
         
     }   // End of the for loop
 
@@ -133,7 +124,7 @@ public func createDatabase() {
      ***********************************************************
      */
     var productStructList = [ProductStruct]()
-    productStructList = decodeJsonFileIntoArrayOfStructs(fullFilename: "ProductInitialContent.json", fileLocation: "Main Bundle")
+    productStructList = decodeJsonFileIntoArrayOfStructs(fullFilename: "InitialContent.json", fileLocation: "Database")
     
     for aProduct in productStructList {
         // Example userImageName = "2A9B8E84-429E-44DC-A6BA-4793558D1180.jpg"
@@ -177,126 +168,20 @@ public func createDatabase() {
         copyImageFileFromAssetsToDocumentDirectory(filename: filenameComponents4[0], fileExtension: filenameComponents4[1])
         // Instantiate a new Business object and dress it up
         let newProduct = Product(
-            name: aProduct.name,
+            productName: aProduct.productName,
+            brand: aProduct.brand,
+            category: aProduct.category,
             price: aProduct.price,
-            product_notes: aProduct.product_notes,
-            photoFilename: aProduct.photoFilename,
-            productWebsite: aProduct.productWebsite,
-            isReview: aProduct.isReview,
-            userRating: aProduct.userRating,
-            textReview: aProduct.textReview,
-            userImageName: aProduct.userImageName,
-            userVideoName: aProduct.userVideoName,
-            audioNoteFilename: aProduct.audioNoteFilename,
-            speechToText: aProduct.speechToText)
+            size: aProduct.size,
+            pricePerUnit: aProduct.pricePerUnit,
+            websiteURL: aProduct.websiteURL,
+            location: aProduct.location,
+            store: aProduct.store,
+            imageLink: aProduct.imageLink)
         
         // Insert the new Business object into the database
         modelContext.insert(newProduct)
         
-    }   // End of the for loop
-    
-    /*
-    ***********************************************************
-    *   Create and Populate the Cars in the Database          *
-    ***********************************************************
-    */
-    var carStructList = [CarStruct]()
-    carStructList = decodeJsonFileIntoArrayOfStructs(fullFilename: "CarInitialContent.json", fileLocation: "Main Bundle")
-    
-    for aCar in carStructList {
-        // Example userImageName = "2A9B8E84-429E-44DC-A6BA-4793558D1180.jpg"
-        let filenameComponents = aCar.userImageName.components(separatedBy: ".")
-        
-        // Copy the photo file from Assets.xcassets to the document directory
-        copyImageFileFromAssetsToDocumentDirectory(filename: filenameComponents[0], fileExtension: filenameComponents[1])
-        
-        // Example audioNoteFilename = "BDB2D176-D39C-4F22-976E-F525F15C0936.m4a"
-        let filenameComponents2 = aCar.audioNoteFilename.components(separatedBy: ".")
-        
-        // Copy the audio file from project folder (main bundle) to document directory
-        copyFileFromMainBundleToDocumentDirectory(filename: filenameComponents2[0], fileExtension: filenameComponents2[1])
-        
-        // Example userVideoName = "ED286A58-689E-4B65-90B7-BF7EE65E0CD1.mp4"
-        let filenameComponents3 = aCar.userVideoName.components(separatedBy: ".")
-        
-        // Copy the video file from project folder (main bundle) to document directory
-        copyFileFromMainBundleToDocumentDirectory(filename: filenameComponents3[0], fileExtension: filenameComponents3[1])
-        
-        // Instantiate a new Car object and populate it
-        let newCar = Car(
-            make: aCar.make,
-            model: aCar.model,
-            imageUrl: aCar.imageUrl,
-            city_mpg: aCar.city_mpg,
-            combination_mpg: aCar.combination_mpg,
-            cylinders: aCar.cylinders,
-            drive: aCar.drive,
-            fuel_type: aCar.fuel_type,
-            transmission: aCar.transmission,
-            year: aCar.year,
-            co2_lb: aCar.co2_lb,
-            isReview: aCar.isReview,
-            userRating: aCar.userRating,
-            textReview: aCar.textReview,
-            userImageName: aCar.userImageName,
-            userVideoName: aCar.userVideoName,
-            audioNoteFilename: aCar.audioNoteFilename,
-            speechToText: aCar.speechToText)
-        
-        // Insert the new Car object into the database
-        modelContext.insert(newCar)
-    }   // End of the for loop
-    
-    /*
-     ***********************************************************
-     *   Create and Populate the Cities in the Database        *
-     ***********************************************************
-     */
-    var cityStructList = [CityStruct]()
-    cityStructList = decodeJsonFileIntoArrayOfStructs(fullFilename: "CityInitialContent.json", fileLocation: "Main Bundle")
-
-    for aCity in cityStructList {
-        // Example userImageName = "2A9B8E84-429E-44DC-A6BA-4793558D1180.jpg"
-        let filenameComponents = aCity.userImageName.components(separatedBy: ".")
-        
-        // Copy the photo file from Assets.xcassets to the document directory
-        copyImageFileFromAssetsToDocumentDirectory(filename: filenameComponents[0], fileExtension: filenameComponents[1])
-        
-        // Example audioNoteFilename = "BDB2D176-D39C-4F22-976E-F525F15C0936.m4a"
-        let filenameComponents2 = aCity.audioNoteFilename.components(separatedBy: ".")
-        
-        // Copy the audio file from project folder (main bundle) to document directory
-        copyFileFromMainBundleToDocumentDirectory(filename: filenameComponents2[0], fileExtension: filenameComponents2[1])
-        
-        // Example userVideoName = "ED286A58-689E-4B65-90B7-BF7EE65E0CD1.mp4"
-        let filenameComponents3 = aCity.userVideoName.components(separatedBy: ".")
-        
-        // Copy the video file from project folder (main bundle) to document directory
-        copyFileFromMainBundleToDocumentDirectory(filename: filenameComponents3[0], fileExtension: filenameComponents3[1])
-        
-        // Instantiate a new City object and populate it
-        let newCity = City(
-            name: aCity.name,
-            imageUrl: aCity.imageUrl,
-            country: aCity.country,
-            countryCode: aCity.countryCode,
-            region: aCity.region,
-            regionCode: aCity.regionCode,
-            elevationMeters: aCity.elevationMeters,
-            population: aCity.population,
-            timeone: aCity.timeone,
-            latitude: aCity.latitude,
-            longitude: aCity.longitude,
-            isReview: aCity.isReview,
-            userRating: aCity.userRating,
-            textReview: aCity.textReview,
-            userImageName: aCity.userImageName,
-            userVideoName: aCity.userVideoName,
-            audioNoteFilename: aCity.audioNoteFilename,
-            speechToText: aCity.speechToText)
-        
-        // Insert the new City object into the database
-        modelContext.insert(newCity)
     }   // End of the for loop
 
     /*
