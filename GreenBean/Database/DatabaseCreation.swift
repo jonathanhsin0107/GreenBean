@@ -56,68 +56,7 @@ public func createDatabase() {
      |   the initial content given in the JSON files.         |
      ----------------------------------------------------------
      */
-    
-    /*
-     ***********************************************************
-     *   Create and Populate the Restaurants in the Database   *
-     ***********************************************************
-     */
-    var storeStructList = [StoreStruct]()
-    storeStructList = decodeJsonFileIntoArrayOfStructs(fullFilename: "InitialContent.json", fileLocation: "Database")
-
-    for aStore in storeStructList {
-        // Example userImageName = "2A9B8E84-429E-44DC-A6BA-4793558D1180.jpg"
-        let filenameComponents = aStore.userImageName.components(separatedBy: ".")
         
-        // filenameComponents[0] = "2A9B8E84-429E-44DC-A6BA-4793558D1180"
-        // filenameComponents[1] = "jpg"
-        
-        // Copy the photo file from Assets.xcassets to document directory.
-        // The function is given in UtilityFunctions.swift
-        copyImageFileFromAssetsToDocumentDirectory(filename: filenameComponents[0], fileExtension: filenameComponents[1])
-        
-        // Example audioNoteFilename = "BDB2D176-D39C-4F22-976E-F525F15C0936.m4a"
-        let filenameComponents2 = aStore.audioNoteFilename.components(separatedBy: ".")
-        
-        // filenameComponents[0] = "BDB2D176-D39C-4F22-976E-F525F15C0936"
-        // filenameComponents[1] = "m4a"
-        
-        // Copy the audio file from project folder (main bundle) to document directory
-        // The function is given in UtilityFunctions.swift
-        copyFileFromMainBundleToDocumentDirectory(filename: filenameComponents2[0], fileExtension: filenameComponents2[1])
-        
-        // Example userVideoName = "ED286A58-689E-4B65-90B7-BF7EE65E0CD1.mp4"
-        let filenameComponents3 = aStore.userVideoName.components(separatedBy: ".")
-        
-        // filenameComponents[0] = "ED286A58-689E-4B65-90B7-BF7EE65E0CD1"
-        // filenameComponents[1] = "mp4"
-        
-        // Copy the audio file from project folder (main bundle) to document directory
-        // The function is given in UtilityFunctions.swift
-        copyFileFromMainBundleToDocumentDirectory(filename: filenameComponents3[0], fileExtension: filenameComponents3[1])
-        
-        // Instantiate a new Business object and dress it up
-        let newStore = Store(
-            name: aStore.name,
-            imageUrl: aStore.imageUrl,
-            phone: aStore.phone,
-            websiteUrl: aStore.websiteUrl,
-            address1: aStore.address1,
-            address2: aStore.address2,
-            address3: aStore.address3,
-            city: aStore.city,
-            state: aStore.state,
-            zipCode: aStore.zipCode,
-            country: aStore.country,
-            latitude: aStore.latitude,
-            longitude: aStore.longitude,
-        
-        // Insert the new Business object into the database
-        modelContext.insert(newStore)
-        
-    }   // End of the for loop
-
-    
     /*
      ***********************************************************
      *   Create and Populate the Restaurants in the Database   *
