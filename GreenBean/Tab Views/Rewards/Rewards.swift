@@ -12,8 +12,13 @@ struct Rewards: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            Text("Your Reward Points: \(viewModel.totalPoints)")
+            ZStack {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(.systemGray6))
+                    .shadow(color: .gray.opacity(0.4), radius: 4, x: 2, y: 2)
+                Text("Your Reward Points: \(viewModel.totalPoints)")
                 .font(.title)
+            }
             
             if let badge = viewModel.currentBadge {
                 Text("Current Badge: \(badge)")
