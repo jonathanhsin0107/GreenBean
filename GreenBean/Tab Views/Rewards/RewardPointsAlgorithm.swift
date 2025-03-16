@@ -3,9 +3,12 @@
 // CS 4644 (Creative Computing Capstone)
 // Team 1 (GreenBean)
 
+import SwiftUI
+import Foundation
+
 class RewardsAlgorithm: ObservableObject {
     @Published var totalPoints = UserDefaults.standard.integer(forKey: "totalPoints")
-    @Published var currentBadge: UserDefaults.standard.string(forKey: "currentBadge")
+    @Published var currentBadge = UserDefaults.standard.string(forKey: "currentBadge")
     
     private let pointsPerDollar = 5
     private let bonusEvents = [
@@ -28,8 +31,8 @@ class RewardsAlgorithm: ObservableObject {
     
     private func updateBadge() {
         for threshold in badgeThresholds {
-            if totalPoints >= threshold.points {
-                currentBadge = threshold.name
+            if totalPoints >= threshold.0 {
+                currentBadge = threshold.1
             }
         }
     }
