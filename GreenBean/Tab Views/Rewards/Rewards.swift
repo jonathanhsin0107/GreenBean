@@ -12,15 +12,13 @@ struct Rewards: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            ZStack {
+            Text("Your Rewards 🎉")
+                .font(.largeTitle)
+                .bold()
+            ZStack{
                 RoundedRectangle(cornerRadius: 16)
                     .fill(Color(.systemGray6))
                     .shadow(color: .gray.opacity(0.4), radius: 4, x: 2, y: 2)
-                
-                Text("Your Rewards 🎉")
-                    .font(.largeTitle)
-                    .bold()
-
                 Text("Total Points: \(rewardsAlgo.totalPoints)")
                     .font(.title2)
                     .padding()
