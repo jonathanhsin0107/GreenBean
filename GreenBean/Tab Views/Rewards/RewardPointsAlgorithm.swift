@@ -33,7 +33,8 @@ class RewardsAlgorithm: ObservableObject {
             hasReceivedFirstPurchaseBonus = true
             UserDefaults.standard.set(true, forKey: "hasReceivedFirstPurchaseBonus")
         }
-        totalPoints += basePoints + (bonusEvents[event ?? ""] ?? 0)
+        bonus += bonusEvents[event ?? ""] ?? 0
+        totalPoints += basePoints + bonus
         updateBadge()
         saveData()
     }
