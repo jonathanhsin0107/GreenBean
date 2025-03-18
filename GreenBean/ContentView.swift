@@ -9,25 +9,45 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    //    @Environment(\.modelContext) private var modelContext
+        @Environment(\.modelContext) private var modelContext
+        @State private var selectedTab: Int = 0
     
     var body: some View {
-        TabView {
-            Tab("Home", systemImage: "house.fill") {
-                Home()
-            }
-            Tab("Scan", systemImage: "document.viewfinder") {
-                Scan()
-            }
-            Tab("Search", systemImage: "magnifyingglass") {
-                Search()
-            }
-            Tab("Rewards", systemImage: "medal.fill") {
-                Rewards()
-            }
-            Tab("Settings", systemImage: "gear") {
-                Settings()
-            }
+        TabView(selection: $selectedTab) {
+            Home(selectedTab: $selectedTab)
+                .tabItem {
+                    Image(systemName: "house.fill")
+                    Text("Home")
+                }
+                .tag(0)
+
+            Scan()
+                .tabItem {
+                    Image(systemName: "document.viewfinder")
+                    Text("Scan")
+                }
+                .tag(1)
+
+            Search()
+                .tabItem {
+                    Image(systemName: "magnifyingglass")
+                    Text("Search")
+                }
+                .tag(2)
+
+            Rewards()
+                .tabItem {
+                    Image(systemName: "medal.fill")
+                    Text("Rewards")
+                }
+                .tag(3)
+
+            Settings()
+                .tabItem {
+                    Image(systemName: "gear")
+                    Text("Settings")
+                }
+                .tag(4)
         }   // End of TabView
         .tabViewStyle(.sidebarAdaptable)
     }

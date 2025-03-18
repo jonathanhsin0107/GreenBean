@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct Home: View {
+    @Binding var selectedTab: Int
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
-                
                 // First Block: Green Bean Special (Navigates to Search)
-                NavigationLink(destination: Search()) { // Link to Search screen
+                Button(action: {selectedTab=2}) { // Link to Search screen
                     ZStack {
                         RoundedRectangle(cornerRadius: 16)
                             .fill(Color(.systemGray6))
@@ -36,7 +36,8 @@ struct Home: View {
                     .frame(height: 180)
                 }
                 .buttonStyle(PlainButtonStyle()) // Removes default NavigationLink styling
-                NavigationLink(destination: Rewards()) { // Link to Search screen
+                
+                Button(action: {selectedTab=3}) { // Link to Search screen
                     ZStack {
                         RoundedRectangle(cornerRadius: 16)
                             .fill(Color(.systemGray6))
@@ -100,7 +101,7 @@ struct Home: View {
         }
     }
 }
-
-#Preview {
-    Home()
-}
+//
+//#Preview {
+//    Home()
+//}
