@@ -16,14 +16,14 @@ struct ContentView: View {
             Tab("Home", systemImage: "house.fill") {
                 Home()
             }
-            Tab("Rewards", systemImage: "medal.fill") {
-                Rewards()
+            Tab("Scan", systemImage: "document.viewfinder") {
+                Scan()
             }
             Tab("Search", systemImage: "magnifyingglass") {
                 Search()
             }
-            Tab("Scan", systemImage: "document.viewfinder") {
-                Scan()
+            Tab("Rewards", systemImage: "medal.fill") {
+                Rewards()
             }
             Tab("Settings", systemImage: "gear") {
                 Settings()

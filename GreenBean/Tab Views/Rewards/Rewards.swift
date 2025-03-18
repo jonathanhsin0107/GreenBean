@@ -36,7 +36,8 @@ struct Rewards: View {
                         .bold()
                 } else {
                     Text("No badges earned yet!")
-                        .foregroundColor(.gray)
+                        .font(.title2)
+//                        .foregroundColor(.gray)
                 }
             }
 
