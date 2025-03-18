@@ -41,7 +41,7 @@ struct Rewards: View {
                 }
             }
 
-            HStack {
+            ZStack {
                 NavigationLink(destination: Scan()) {
                     Text("Scan Purchase to Earn Points")
                         .padding()
