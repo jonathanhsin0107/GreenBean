@@ -43,8 +43,7 @@ struct Rewards: View {
 
             HStack {
                 Button("Scan Purchase to Earn Points") {
-                    //TODO
-                    //Should navigate to scanner
+                    NavigationLink(destination: Scan())
                 }
                 .buttonStyle(.borderedProminent)
             }
