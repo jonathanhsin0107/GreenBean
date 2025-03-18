@@ -42,10 +42,13 @@ struct Rewards: View {
             }
 
             HStack {
-                Button("Scan Purchase to Earn Points") {
-                    NavigationLink(destination: Scan())
+                NavigationLink(destination: Scan()) {
+                    Text("Scan Purchase to Earn Points")
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(Color.blue)
+                        .cornerRadius(8)
                 }
-                .buttonStyle(.borderedProminent)
             }
         }
         .padding()
