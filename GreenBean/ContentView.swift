@@ -35,7 +35,7 @@ struct ContentView: View {
                 }
                 .tag(2)
 
-            Rewards()
+            Rewards(selectedTab: $selectedTab)
                 .tabItem {
                     Image(systemName: "medal.fill")
                     Text("Rewards")

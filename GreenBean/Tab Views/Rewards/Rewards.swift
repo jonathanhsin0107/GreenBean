@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Rewards: View {
     @StateObject private var rewardsAlgo = RewardsAlgorithm()
+    @Binding var selectedTab: Int
 
     var body: some View {
         VStack(spacing: 20) {
@@ -53,7 +54,7 @@ struct Rewards: View {
             .padding(.horizontal)
 
             ZStack {
-                NavigationLink(destination: Scan()) {
+                Button(action: {selectedTab=1}) {
                     Text("Scan Purchase to Earn Points")
                         .padding()
                     //  .frame(maxWidth: .infinity)
@@ -74,8 +75,4 @@ struct Rewards: View {
             default: return nil
         }
     }
-}
-            
-#Preview {
-  Rewards()
 }
