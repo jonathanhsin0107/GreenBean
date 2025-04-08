@@ -36,3 +36,8 @@ struct ProductStruct: Decodable, Encodable, Hashable{
     var store: String
     var imageLink: String
 }
+
+struct FoundProductStruct:Decodable, Encodable, Hashable{
+    var name: String
+    var price: Double
+}
