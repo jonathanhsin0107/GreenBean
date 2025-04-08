@@ -2,20 +2,50 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-<<<<<<< Updated upstream
-	<key>NSCameraUsageDescription</key>
-	<string>GreenBean needs to use your camera to scan receipts</string>
-=======
-	<key>CFBundleIdentifier</key>
-	<string></string>
-	<key>NSCameraUsageDescription</key>
-	<string>We use the camera so you can take pictures of your medicine.
-We use the camera so you can take pictures of your medicine.</string>
->>>>>>> Stashed changes
-	<key>UILaunchScreen</key>
-	<dict>
-		<key>UIImageName</key>
-		<string>LaunchImage</string>
-	</dict>
+    <!-- Bundle identifier for your app -->
+    <key>CFBundleIdentifier</key>
+    <string>com.yourname.GreenBean</string>
+
+    <!-- Camera permission usage description -->
+    <key>NSCameraUsageDescription</key>
+    <string>GreenBean needs to use your camera to scan receipts.</string>
+
+    <!-- Launch screen (modern iOS uses this key) -->
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+
+    <!-- App version number -->
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+
+    <!-- Build number -->
+    <key>CFBundleVersion</key>
+    <string>1</string>
+
+    <!-- App display name (how the app appears under its icon) -->
+    <key>CFBundleName</key>
+    <string>GreenBean</string>
+
+    <!-- Main app icon files (you can add more if needed) -->
+    <key>CFBundleIcons</key>
+    <dict>
+        <key>CFBundlePrimaryIcon</key>
+        <dict>
+            <key>CFBundleIconFiles</key>
+            <array>
+                <string>AppIcon-60x60</string>
+                <string>AppIcon-76x76</string>
+                <string>AppIcon-120x120</string>
+                <string>AppIcon-180x180</string>
+            </array>
+            <key>UIPrerenderedIcon</key>
+            <true/>
+        </dict>
+    </dict>
+
+    <!-- Permissions (if you are using additional features, like location) -->
+    <!-- For example, if your app needs location permissions: -->
+    <!-- <key>NSLocationWhenInUseUsageDescription</key> -->
+    <!-- <string>We need your location to show nearby coffee shops.</string> -->
 </dict>
 </plist>

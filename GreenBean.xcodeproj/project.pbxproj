@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		ABBDB5AC2DA5C8E6001C7B38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		ABCC2FBC2D6E83E3007325E4 /* GreenBean.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GreenBean.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		ABCC301F2D6EB5E9007325E4 /* Exceptions for "GreenBean" folder in "GreenBean" target */ = {
+		AB872A102DA5CB380082872C /* Exceptions for "GreenBean" folder in "GreenBean" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -24,7 +25,7 @@
 		ABCC2FBE2D6E83E3007325E4 /* GreenBean */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				ABCC301F2D6EB5E9007325E4 /* Exceptions for "GreenBean" folder in "GreenBean" target */,
+				AB872A102DA5CB380082872C /* Exceptions for "GreenBean" folder in "GreenBean" target */,
 			);
 			path = GreenBean;
 			sourceTree = "<group>";
@@ -45,6 +46,7 @@
 		ABCC2FB32D6E83E3007325E4 = {
 			isa = PBXGroup;
 			children = (
+				ABBDB5AC2DA5C8E6001C7B38 /* Info.plist */,
 				ABCC2FBE2D6E83E3007325E4 /* GreenBean */,
 				ABCC2FBD2D6E83E3007325E4 /* Products */,
 			);
@@ -266,7 +268,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GreenBean/Preview Content\"";
-				DEVELOPMENT_TEAM = 8Q5HRU3C76;
+				DEVELOPMENT_TEAM = TZ5CQ7K528;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GreenBean/Info.plist;
@@ -295,7 +297,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GreenBean/Preview Content\"";
-				DEVELOPMENT_TEAM = 8Q5HRU3C76;
+				DEVELOPMENT_TEAM = TZ5CQ7K528;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GreenBean/Info.plist;

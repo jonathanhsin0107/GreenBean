@@ -35,3 +35,12 @@ import SwiftData
         self.imageLink = imageLink
     }
 }
+@Model final class FoundProduct{
+    var name: String
+    var price: Double
+    
+    init(name: String, price: Double) {
+        self.name = name
+        self.price = price
+    }
+}
