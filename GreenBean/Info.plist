@@ -2,8 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+<<<<<<< Updated upstream
 	<key>NSCameraUsageDescription</key>
 	<string>GreenBean needs to use your camera to scan receipts</string>
+=======
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>NSCameraUsageDescription</key>
+	<string>We use the camera so you can take pictures of your medicine.
+We use the camera so you can take pictures of your medicine.</string>
+>>>>>>> Stashed changes
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIImageName</key>

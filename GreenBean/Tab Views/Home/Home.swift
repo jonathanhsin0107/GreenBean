@@ -1,7 +1,8 @@
 import SwiftUI
 
-struct Home: View {
+struct HomeView: View {
     @Binding var selectedTab: Int
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
@@ -37,15 +38,15 @@ struct Home: View {
                 }
                 .buttonStyle(PlainButtonStyle()) // Removes default NavigationLink styling
                 
-                Button(action: {selectedTab=3}) { // Link to Search screen
+                NavigationLink(destination: MedicineTrackerView()) {
                     ZStack {
                         RoundedRectangle(cornerRadius: 16)
                             .fill(Color(.systemGray6))
                             .shadow(color: .gray.opacity(0.4), radius: 4, x: 2, y: 2)
                         
                         VStack(spacing: 10) {
-                            // Load shopping basket image
-                            AsyncImage(url: URL(string: "https://cdn-icons-png.flaticon.com/512/7937/7937682.png")) { phase in
+                            // Load medicine icon
+                            AsyncImage(url: URL(string: "https://cdn-icons-png.flaticon.com/512/4599/4599153.png")) { phase in
                                 if let image = phase.image {
                                     image
                                         .resizable()
@@ -58,9 +59,10 @@ struct Home: View {
                                 }
                             }
                             
-                            Text("Your Rewards")
+                            Text("Medicine Tracker")
                                 .font(.headline)
                                 .multilineTextAlignment(.center)
+                                .foregroundColor(Color.primary)
                         }
                         .padding()
                     }
