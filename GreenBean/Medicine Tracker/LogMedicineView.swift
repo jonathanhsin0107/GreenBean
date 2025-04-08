@@ -53,7 +53,7 @@ struct LoggedMedicinesView: View {
                     .padding()
             } else {
                 List {
-                    ForEach(loggedList, id: \..self) { med in
+                    ForEach(loggedList, id: \.self) { med in
                         HStack(alignment: .top) {
                             if let saved = loadImage(for: med) {
                                 Image(uiImage: saved)
@@ -91,10 +91,12 @@ struct LoggedMedicinesView: View {
 
                             VStack(alignment: .trailing, spacing: 2) {
                                 if let date = expirationDate(for: med) {
-                                    let daysLeft = daysUntilExpiration(from: date)
-                                    Text(daysLeft)
+                                    let daysLeftString = daysUntilExpiration(from: date)
+                                    let isExpired = daysLeftString.contains("❌") || daysLeftString.contains("⚠️")
+
+                                    Text(daysLeftString)
                                         .font(.caption2)
-                                        .foregroundColor(daysLeft.contains("Expired") ? .gray : .red)
+                                        .foregroundColor(isExpired ? .gray : .red)
                                 } else {
                                     Text("No date")
                                         .font(.caption2)

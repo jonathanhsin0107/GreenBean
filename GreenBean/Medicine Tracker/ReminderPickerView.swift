@@ -67,7 +67,7 @@ struct ReminderPickerView: View {
                                 }
                             }) {
                                 HStack {
-                                    Text("Remind me in \(months) month\(months == 1 ? "" : "s")")
+                                    Text("Remind me \(months) month\(months == 1 ? "" : "s") before")
                                         .fontWeight(.medium)
                                     Spacer()
                                     Image(systemName: selectedDurations.contains(months) ? "checkmark.circle.fill" : "circle")
