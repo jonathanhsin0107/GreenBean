@@ -209,7 +209,7 @@ struct ScanReceipt: View {
                         //-----------------------
                         // Obtain Product Name
                         //-----------------------
-                        var currname = ""
+                        //var currname = ""
                         guard let currname = foundProductDictionary["description"] as? String
                         else{
                             continue
@@ -218,7 +218,7 @@ struct ScanReceipt: View {
                         //----------------------
                         // Obtain Product Price
                         //----------------------
-                        var currprice = 0.0
+                        //var currprice = 0.0
 
                         guard let currprice = foundProductDictionary["total"] as? Double
                         else{

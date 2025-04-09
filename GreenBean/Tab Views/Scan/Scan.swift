@@ -9,7 +9,11 @@
 import SwiftUI
 
 struct Scan: View {
+    //@EnvironmentObject var rewardsAlgo: RewardsAlgorithm
+    
     var body: some View {
+        //rewardsAlgo.computePoints(spent: 10, event: "")
+        
         NavigationStack{
             List{
                 NavigationLink(destination: ScanBarCode()){

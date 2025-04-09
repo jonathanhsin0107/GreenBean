@@ -3,12 +3,10 @@ import SwiftUI
 import SwiftData
 
 struct ProductItem: View {
-    //let product: Product
-    @Environment(\.modelContext) private var modelContext
-    @Bindable var product: Product
+    let product: Product
     
     var body: some View {
-        HStack {
+        HStack(alignment: .center) {
             getImageFromUrl(url: product.imageLink, defaultFilename: "ImageUnavailable")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -37,18 +35,18 @@ struct ProductItem: View {
             }
             // Set font and size for the whole VStack content
             .font(.system(size: 14))
-        }   // End of HStack
-        
-        Spacer()
-        Button(action: {
-            product.isFavorite.toggle()
-            try? modelContext.save()
-        })
-        {
-            Image(systemName: product.isFavorite ? "heart.fill" : "heart")
-                .foregroundColor(.red)
-                .font(.title2)
+            
+            Spacer()
+            Button(action: {
+                product.isFavorite.toggle()     // when heart/favorite button is tapped, it changes the boolean flag
+            })
+            {
+                // if isFavorite is true, it will show the filled heart symbol, else normal symbol
+                Image(systemName: product.isFavorite ? "heart.fill" : "heart")
+                    .foregroundColor(.red)
+                    .font(.title2)
+            }
+            .buttonStyle(PlainButtonStyle())
         }
-        .buttonStyle(PlainButtonStyle())
     }
-}
+}   // End of HStack

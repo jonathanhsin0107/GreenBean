@@ -16,7 +16,7 @@ class RewardsAlgorithm: ObservableObject {
     private let bonusEvents = [
       //"first_purchase": 50,
         "birthday": 100,
-        "referral": 150
+        //"referral": 150
     ]
     private let badgeThresholds = [
         (100, "Planet Caretaker"),

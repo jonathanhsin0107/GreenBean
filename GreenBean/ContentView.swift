@@ -11,6 +11,7 @@ import SwiftData
 struct ContentView: View {
         @Environment(\.modelContext) private var modelContext
         @State private var selectedTab: Int = 0
+        @StateObject private var rewardsAlgo = RewardsAlgorithm()
     
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -56,6 +57,7 @@ struct ContentView: View {
                 }
                 .tag(5)
         }   // End of TabView
+        .environmentObject(rewardsAlgo) // makes the rewardPointsAlgorithm available to all views
         .tabViewStyle(.sidebarAdaptable)
     }
 }

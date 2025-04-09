@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct Rewards: View {
-    @StateObject private var rewardsAlgo = RewardsAlgorithm()
+    //@StateObject private var rewardsAlgo = RewardsAlgorithm()
+    @EnvironmentObject var rewardsAlgo: RewardsAlgorithm    // making rewardsAlgorithm global so scan can use it
     @Binding var selectedTab: Int
 
     var body: some View {
@@ -33,17 +34,20 @@ struct Rewards: View {
                     .shadow(color: .gray.opacity(0.4), radius: 4, x: 2, y: 2)
                 //  .frame(height: 100)
             
-                HStack {    
+                //HStack {
+                VStack {
                     if let badge = rewardsAlgo.currentBadge, let badgeImage = getBadgeImage(for: badge) {
                         Image(badgeImage)
                             .resizable()
                             .frame(width: 60, height: 60)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .padding(.bottom, 4)
                         
-                        Text("Badge 🏅: \(badge)")
+                        Text("Badge🏅: \(badge)")
                             .font(.title3)
                             .foregroundColor(.green)
                             .bold()
+                            .multilineTextAlignment(.center)
                     } else {
                         Text("No badges earned yet!")
                             .font(.title2)
@@ -53,6 +57,27 @@ struct Rewards: View {
             }
             .padding(.horizontal)
 
+            // ----------------------
+            // Just to check if it points and badges are saved and updates correctly
+            VStack(spacing: 10) {
+                Button("Test Purchase ($10)") {
+                    rewardsAlgo.computePoints(spent: 10.0, event: nil)
+                }
+
+                Button("Test Birthday Bonus") {
+                    rewardsAlgo.computePoints(spent: 0.0, event: "birthday")
+                }
+
+                Button("Reset Points & Badge") {
+                    rewardsAlgo.resetRewards()
+                }
+            }
+            .padding()
+            .buttonStyle(.borderedProminent)
+            
+            Spacer()
+            // ----------------------
+            
             ZStack {
                 Button(action: {selectedTab=1}) {
                     Text("Scan Purchase to Earn Points")
