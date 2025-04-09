@@ -14,20 +14,12 @@ struct ContentView: View {
     
     var body: some View {
         TabView(selection: $selectedTab) {
-            HomeView(selectedTab: $selectedTab)
-
+            Rewards(selectedTab: $selectedTab)
                 .tabItem {
-                    Image(systemName: "house.fill")
-                    Text("Home")
+                    Image(systemName: "medal.fill")
+                    Text("Rewards")
                 }
-                .tag(0)
-
-            Scan()
-                .tabItem {
-                    Image(systemName: "document.viewfinder")
-                    Text("Scan")
-                }
-                .tag(1)
+                .tag(3)
 
             Search()
                 .tabItem {
@@ -35,13 +27,27 @@ struct ContentView: View {
                     Text("Search")
                 }
                 .tag(2)
-
-            Rewards(selectedTab: $selectedTab)
+                
+            HomeView(selectedTab: $selectedTab)
                 .tabItem {
-                    Image(systemName: "medal.fill")
-                    Text("Rewards")
+                    Image(systemName: "house.fill")
+                    Text("Home")
                 }
-                .tag(3)
+                .tag(0)
+
+            Favorites()
+                .tabItem {
+                    Image(systemName:"heart.fill")
+                    Text("Favorites")
+                }
+                .tag(4)
+                
+            Scan()
+                .tabItem {
+                    Image(systemName: "document.viewfinder")
+                    Text("Scan")
+                }
+                .tag(1)
 
             Settings()
                 .tabItem {
@@ -53,8 +59,7 @@ struct ContentView: View {
         .tabViewStyle(.sidebarAdaptable)
     }
 }
-    
-    
+
 #Preview {
     ContentView()
 }
