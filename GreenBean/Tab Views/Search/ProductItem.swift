@@ -1,8 +1,11 @@
 // ProductItem.swift
 import SwiftUI
+import SwiftData
 
 struct ProductItem: View {
-    let product: Product
+    //let product: Product
+    @Environment(\.modelContext) private var modelContext
+    @Bindable var product: Product
     
     var body: some View {
         HStack {
@@ -34,7 +37,18 @@ struct ProductItem: View {
             }
             // Set font and size for the whole VStack content
             .font(.system(size: 14))
-            
         }   // End of HStack
+        
+        Spacer()
+        Button(action: {
+            product.isFavorite.toggle()
+            try? modelContext.save()
+        })
+        {
+            Image(systemName: product.isFavorite ? "heart.fill" : "heart")
+                .foregroundColor(.red)
+                .font(.title2)
+        }
+        .buttonStyle(PlainButtonStyle())
     }
 }
