@@ -21,8 +21,9 @@ import SwiftData
     var location: String
     var store: String
     var imageLink: String
+    var isFavorite: Bool = false
     
-    init(productName: String, brand: String, category: String, price: String, size: String, pricePerUnit: String, websiteURL: String, location: String, store: String, imageLink: String) {
+    init(productName: String, brand: String, category: String, price: String, size: String, pricePerUnit: String, websiteURL: String, location: String, store: String, imageLink: String, isFavorite: Bool = false) {
         self.productName = productName
         self.brand = brand
         self.category = category
@@ -33,6 +34,7 @@ import SwiftData
         self.location = location
         self.store = store
         self.imageLink = imageLink
+        self.isFavorite = isFavorite
     }
 }
 @Model final class FoundProduct{
