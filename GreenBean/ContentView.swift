@@ -54,7 +54,7 @@ struct ContentView: View {
                     Image(systemName: "gear")
                     Text("Settings")
                 }
-                .tag(4)
+                .tag(5)
         }   // End of TabView
         .tabViewStyle(.sidebarAdaptable)
     }
