@@ -22,6 +22,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		911DC8462DA7264300DD65EA /* location */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = location;
+			sourceTree = "<group>";
+		};
 		ABCC2FBE2D6E83E3007325E4 /* GreenBean */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -46,6 +51,7 @@
 		ABCC2FB32D6E83E3007325E4 = {
 			isa = PBXGroup;
 			children = (
+				911DC8462DA7264300DD65EA /* location */,
 				ABBDB5AC2DA5C8E6001C7B38 /* Info.plist */,
 				ABCC2FBE2D6E83E3007325E4 /* GreenBean */,
 				ABCC2FBD2D6E83E3007325E4 /* Products */,
@@ -76,6 +82,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				911DC8462DA7264300DD65EA /* location */,
 				ABCC2FBE2D6E83E3007325E4 /* GreenBean */,
 			);
 			name = GreenBean;
@@ -265,14 +272,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GreenBean/GreenBean.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GreenBean/Preview Content\"";
-				DEVELOPMENT_TEAM = 8Q5HRU3C76;
+				DEVELOPMENT_TEAM = 9C7QM2YN9Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GreenBean/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "GreenBean needs to use your camera to scan receipts.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "GreenBean uses your location to provide you with accurate store filtering.\n";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "GreenBean uses your location to show store-specific sustainable products nearby.\n";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -283,7 +293,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.bita.GreenBean;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joseph.GreenBean;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -296,14 +306,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GreenBean/GreenBean.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GreenBean/Preview Content\"";
-				DEVELOPMENT_TEAM = 8Q5HRU3C76;
+				DEVELOPMENT_TEAM = 9C7QM2YN9Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GreenBean/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "GreenBean needs to use your camera to scan receipts.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "GreenBean uses your location to provide you with accurate store filtering.\n";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "GreenBean uses your location to show store-specific sustainable products nearby.\n";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -314,7 +327,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.bita.GreenBean;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joseph.GreenBean;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

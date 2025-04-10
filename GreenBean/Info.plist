@@ -2,25 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleIcons</key>
-	<dict>
-		<key>CFBundlePrimaryIcon</key>
-		<dict>
-			<key>CFBundleIconFiles</key>
-			<array>
-				<string>AppIcon-60x60</string>
-				<string>AppIcon-76x76</string>
-				<string>AppIcon-120x120</string>
-				<string>AppIcon-180x180</string>
-			</array>
-			<key>UIPrerenderedIcon</key>
-			<true/>
-		</dict>
-	</dict>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>remote-notification</string>
-		<string>fetch</string>
-	</array>
+    <key>CFBundleIdentifier</key>
+    <string>com.yourname.GreenBean</string>
+    
+    <key>NSCameraUsageDescription</key>
+    <string>GreenBean needs to use your camera to scan receipts.</string>
+    
+    <key>UILaunchScreen</key>
+    <dict>
+        <key>UIImageName</key>
+        <string>LaunchImage</string>
+    </dict>
 </dict>
 </plist>

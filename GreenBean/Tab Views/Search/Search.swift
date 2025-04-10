@@ -1,14 +1,7 @@
-//
-//  Search.swift
-//  GreenBean
-//
-//  Created by Osman Balci on 10/20/24.
-//  Modified by Jonathan on 2/25/25.
-//  Copyright © 2025 Jonathan Hsin. All rights reserved.
-//
 
 import SwiftUI
 import SwiftData
+import CoreLocation
 
 struct Search: View {
     @Environment(\.modelContext) private var modelContext
@@ -16,39 +9,60 @@ struct Search: View {
     
     @State private var toBeDeleted: IndexSet?
     @State private var showConfirmation = false
-    
-    // Search Bar: 1 of 4 --> searchText contains the search query entered by the user
     @State private var searchText = ""
-    
+
+    // ✅ Add LocationManager
+    @StateObject private var locationManager = LocationManager()
+
     var body: some View {
         NavigationStack {
-            List {
-                // Search Bar: 2 of 4 --> Use filteredPhoto
-                ForEach(filteredProducts) { aProduct in
-                    NavigationLink(destination: ProductDetails(product: aProduct)) {
-                        ProductItem(product: aProduct)
+            VStack(alignment: .leading, spacing: 8) {
 
-                    }
+                // ✅ Optional: Show store detection status
+                if let currentStore = locationManager.currentStore {
+                    Text("📍 Showing results for: \(currentStore)")
+                        .font(.caption)
+                        .foregroundColor(.green)
+                        .padding(.horizontal)
+                } else {
+                    Text("📍 Searching all stores")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .padding(.horizontal)
                 }
-                .onDelete(perform: delete)
-                
-            }   // End of List
-            .font(.system(size: 14))
+
+                List {
+                    ForEach(filteredProducts) { aProduct in
+                        NavigationLink(destination: ProductDetails(product: aProduct)) {
+                            ProductItem(product: aProduct)
+                        }
+                    }
+                    .onDelete(perform: delete)
+                }
+                .font(.system(size: 14))
+            }
             .navigationTitle("Search Products")
             .toolbarTitleDisplayMode(.inline)
-            
-        }   // End of NavigationStack
-        // Search Bar: 3 of 4 --> Attach 'searchable' modifier to the NavigationStack
+        }
         .searchable(text: $searchText, prompt: "Search a Product through Name or Store")
-        
-    }   // End of body var
-    
-    // Search Bar: 4 of 4 --> Compute filtered results
+    }
+
+    // ✅ Location-aware and text-aware filtering
     var filteredProducts: [Product] {
+        var base = listOfAllProductsInDatabase
+        
+        // Filter by nearby store if available
+        if let store = locationManager.currentStore {
+            base = base.filter {
+                $0.store.localizedCaseInsensitiveContains(store)
+            }
+        }
+
+        // Apply search filtering
         if searchText.isEmpty {
-            listOfAllProductsInDatabase
+            return base
         } else {
-            listOfAllProductsInDatabase.filter {
+            return base.filter {
                 $0.productName.localizedStandardContains(searchText) ||
                 $0.store.localizedStandardContains(searchText)
             }
@@ -56,13 +70,11 @@ struct Search: View {
     }
 
     func delete(at offsets: IndexSet) {
-        
         toBeDeleted = offsets
         showConfirmation = true
     }
-} // End of struct
+}
 
 #Preview {
     Search()
 }
-
