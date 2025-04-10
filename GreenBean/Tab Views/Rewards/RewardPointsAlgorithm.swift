@@ -21,7 +21,7 @@ class RewardsAlgorithm: ObservableObject {
     private let badgeThresholds = [
         (100, "Planet Caretaker"),
         (500, "Ecological Hero"),
-        (2000, "Sustainability Champion")
+        (2000, "Sustainability Champ")
     ]
 
     func computePoints(spent: Double, event: String?) {

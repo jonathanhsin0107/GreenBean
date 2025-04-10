@@ -26,7 +26,8 @@ struct Rewards: View {
                     .font(.title2)
                     .padding()
             }
-            //.padding(.horizontal)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal)
 
             ZStack {
                 RoundedRectangle(cornerRadius: 16)
@@ -39,7 +40,7 @@ struct Rewards: View {
                     if let badge = rewardsAlgo.currentBadge, let badgeImage = getBadgeImage(for: badge) {
                         Image(badgeImage)
                             .resizable()
-                            .frame(width: 60, height: 60)
+                            .frame(width: 250, height: 250)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             .padding(.bottom, 4)
                         
@@ -55,27 +56,28 @@ struct Rewards: View {
                 }
                 .padding()
             }
+            .frame(maxWidth: .infinity)
             .padding(.horizontal)
 
             // ----------------------
-            // Just to check if it points and badges are saved and updates correctly
-            VStack(spacing: 10) {
-                Button("Test Purchase ($10)") {
-                    rewardsAlgo.computePoints(spent: 10.0, event: nil)
-                }
-
-                Button("Test Birthday Bonus") {
-                    rewardsAlgo.computePoints(spent: 0.0, event: "birthday")
-                }
-
-                Button("Reset Points & Badge") {
-                    rewardsAlgo.resetRewards()
-                }
-            }
-            .padding()
-            .buttonStyle(.borderedProminent)
-            
-            Spacer()
+//            // Just to check if it points and badges are saved and updates correctly
+//            VStack(spacing: 10) {
+//                Button("Test Purchase ($10)") {
+//                    rewardsAlgo.computePoints(spent: 10.0, event: nil)
+//                }
+//
+//                Button("Test Birthday Bonus") {
+//                    rewardsAlgo.computePoints(spent: 0.0, event: "birthday")
+//                }
+//
+//                Button("Reset Points & Badge") {
+//                    rewardsAlgo.resetRewards()
+//                }
+//            }
+//            .padding()
+//            .buttonStyle(.borderedProminent)
+//            
+//            Spacer()
             // ----------------------
             
             ZStack {
@@ -96,7 +98,7 @@ struct Rewards: View {
         switch badge {
             case "Planet Caretaker": return "planet_caretaker_picture"
             case "Ecological Hero": return "ecological_hero_picture"
-            case "Sustainability Champion": return "sustainability_champion_picture"
+            case "Sustainability Champ": return "sustainability_champion_picture"
             default: return nil
         }
     }
