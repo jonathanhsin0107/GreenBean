@@ -11,14 +11,12 @@ struct Search: View {
     @State private var showConfirmation = false
     @State private var searchText = ""
 
-    // ✅ Add LocationManager
     @StateObject private var locationManager = LocationManager()
 
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 8) {
 
-                // ✅ Optional: Show store detection status
                 if let currentStore = locationManager.currentStore {
                     Text("📍 Showing results for: \(currentStore)")
                         .font(.caption)
@@ -47,18 +45,15 @@ struct Search: View {
         .searchable(text: $searchText, prompt: "Search a Product through Name or Store")
     }
 
-    // ✅ Location-aware and text-aware filtering
     var filteredProducts: [Product] {
         var base = listOfAllProductsInDatabase
         
-        // Filter by nearby store if available
         if let store = locationManager.currentStore {
             base = base.filter {
                 $0.store.localizedCaseInsensitiveContains(store)
             }
         }
 
-        // Apply search filtering
         if searchText.isEmpty {
             return base
         } else {
