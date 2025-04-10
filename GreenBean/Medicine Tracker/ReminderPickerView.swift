@@ -67,7 +67,7 @@ struct ReminderPickerView: View {
                                 }
                             }) {
                                 HStack {
-                                    Text("Remind me \(months) month\(months == 1 ? "" : "s") before")
+                                    Text("Remind me \(months) month\(months == 1 ? "" : "s") from now")
                                         .fontWeight(.medium)
                                     Spacer()
                                     Image(systemName: selectedDurations.contains(months) ? "checkmark.circle.fill" : "circle")
@@ -117,12 +117,15 @@ struct ReminderPickerView: View {
     // MARK: - Permissions
 
     private func requestNotificationPermission() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, _ in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             print(granted ? "✅ Notifications allowed" : "❌ Notifications denied")
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+            }
         }
     }
 
-    // MARK: - Medicine-Specific Reminder
+    // MARK: - Medicine-Specific Reminder (Daily)
 
     private func scheduleMedicineNotification(medicineName: String) {
         let content = UNMutableNotificationContent()
@@ -139,7 +142,13 @@ struct ReminderPickerView: View {
             trigger: trigger
         )
 
-        UNUserNotificationCenter.current().add(request)
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("❌ Error scheduling daily reminder: \(error)")
+            } else {
+                print("✅ Daily reminder scheduled for \(components)")
+            }
+        }
     }
 
     // MARK: - General Reminder in X Months
@@ -158,13 +167,20 @@ struct ReminderPickerView: View {
             let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
 
             let request = UNNotificationRequest(
-                identifier: UUID().uuidString,
+                identifier: "inventoryCheck_\(UUID().uuidString)",
                 content: content,
                 trigger: trigger
             )
 
-            UNUserNotificationCenter.current().add(request)
-            print("📅 Reminder set for \(months) months later: \(futureDate)")
+            UNUserNotificationCenter.current().add(request) { error in
+                if let error = error {
+                    print("❌ Error scheduling inventory reminder: \(error)")
+                } else {
+                    print("📅 Reminder scheduled for \(futureDate) (\(months) months later)")
+                }
+            }
+        } else {
+            print("⚠️ Could not calculate future date for \(months) months.")
         }
     }
 }

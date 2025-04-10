@@ -82,6 +82,11 @@ struct ExpirationEntryView: View {
     }
 
     private func scheduleNotification(for medicineName: String, expirationDate: Date) {
+        guard !medicineName.isEmpty else {
+            print("⚠️ Skipping notification — medicine name is empty")
+            return
+        }
+
         let content = UNMutableNotificationContent()
         content.title = "Reminder for \(medicineName)"
         content.body = "This medicine expires soon — check your inventory!"
@@ -101,6 +106,7 @@ struct ExpirationEntryView: View {
             }
         }
     }
+
 
     private func getSavedExpiration() -> Date? {
         let components = expirationStorage.split(separator: "=")
