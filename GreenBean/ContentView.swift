@@ -43,7 +43,7 @@ struct ContentView: View {
                 }
                 .tag(4)
                 
-            Scan()
+            ScanReceipt(selectedTab: $selectedTab)
                 .tabItem {
                     Image(systemName: "document.viewfinder")
                     Text("Scan")

@@ -10,6 +10,7 @@ import SwiftUI
 
 struct Scan: View {
     //@EnvironmentObject var rewardsAlgo: RewardsAlgorithm
+    @Binding var selectedTab: Int
     
     var body: some View {
         //rewardsAlgo.computePoints(spent: 10, event: "")
@@ -22,7 +23,7 @@ struct Scan: View {
                         Text("Scan Bar Code")
                     }
                 }
-                NavigationLink(destination: ScanReceipt()){
+                NavigationLink(destination: ScanReceipt(selectedTab: $selectedTab)){
                     HStack{
                         Image(systemName: "document.viewfinder.fill")
                         Text("Scan Receipt")
@@ -31,8 +32,4 @@ struct Scan: View {
             }
         }
     }
-}
-
-#Preview {
-    Scan()
 }

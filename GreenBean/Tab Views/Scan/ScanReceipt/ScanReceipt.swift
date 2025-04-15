@@ -11,9 +11,13 @@ import SwiftUI
 import Vision
 
 struct ScanReceipt: View {
+    @Binding var selectedTab: Int
     @State private var showImagePicker = false
     @State private var pickedUIImage: UIImage?
     @State private var foundProductsList = [FoundProductStruct]()
+    @State private var validDollars : Double = 0.0
+    
+    @EnvironmentObject var rewardsAlgo: RewardsAlgorithm
     
     var body: some View {
         Form {
@@ -30,6 +34,7 @@ struct ScanReceipt: View {
                 } else {
                     ForEach(foundProductsList.indices, id: \.self) { index in
                         let product = foundProductsList[index]
+
                         HStack {
                             Text(product.name)
                             Spacer()
@@ -39,18 +44,40 @@ struct ScanReceipt: View {
                     }
                 }
             }
+            
+            if !foundProductsList.isEmpty{
+                Section(header: Text("Sustainable Shopping Amount Spent")){
+                    Text(String(format: "$%.2f", validDollars))
+                }
+                Section(header: Text("Earn Points")){
+                    Button(action: {selectedTab=3
+                        rewardsAlgo.computePoints(spent: validDollars, event: nil)
+                        foundProductsList = [FoundProductStruct]()
+                    }) {
+                        Text("Add Points")
+                            .padding()
+                        //  .frame(maxWidth: .infinity)
+                            .foregroundColor(.white)
+                            .background(Color.blue)
+                            .cornerRadius(8)
+                    }
+                }
+            }
         }
         .sheet(isPresented: $showImagePicker) {
             ImagePicker(uiImage: $pickedUIImage, sourceType: .camera, imageWidth: 500.0, imageHeight: 281.25)
         }
         .onChange(of: pickedUIImage) { _, newValue in
             if let image = newValue {
-                recognizeText(from: image)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    recognizeText(from: image)
+                }
             }
         }
     }
     private func recognizeText(from image: UIImage) {
         foundProductsList = [FoundProductStruct]()
+        validDollars = 0.0
         if let image = pickedUIImage,
            let imageData = image.jpegData(compressionQuality: 0.9) {
             
@@ -193,6 +220,8 @@ struct ScanReceipt: View {
                     } else {
                         return
                     }
+                    var tempProductsList: [FoundProductStruct] = []
+                    var tempValidDollars: Double = 0.0
                     
                     for foundProductObj in arrayOfResultsJsonObjects {
                         //--------------------------
@@ -219,15 +248,21 @@ struct ScanReceipt: View {
                         // Obtain Product Price
                         //----------------------
                         //var currprice = 0.0
-
+                        
                         guard let currprice = foundProductDictionary["total"] as? Double
                         else{
                             continue
                         }
                         
                         let currProduct=FoundProductStruct(name: currname, price: currprice)
-                        foundProductsList.append(currProduct)
+                        tempProductsList.append(currProduct)
+                        switch currProduct.name{
+                            case "NPR CF EX LR BRN EGG" : tempValidDollars += currProduct.price
+                            default : tempValidDollars += 0.0
+                        }
                     }   //End of for loop
+                    self.foundProductsList = tempProductsList
+                    self.validDollars = tempValidDollars
                     
                 } catch {
                     print("Error parsing CarbonSutra API JSON: \(error.localizedDescription)")
