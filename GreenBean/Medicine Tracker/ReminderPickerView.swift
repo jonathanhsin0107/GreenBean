@@ -12,6 +12,7 @@ struct ReminderPickerView: View {
     @State private var selectedDurations: Set<Int> = []
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.dismiss) var dismiss
+    @State private var testReminder = false
 
     @State private var showConfirmation = false
     @State private var confirmationMessage = ""
@@ -55,11 +56,28 @@ struct ReminderPickerView: View {
                         Text("Set a Reminder")
                             .font(.largeTitle)
                             .bold()
-
+                        
                         Text("Choose when you'd like to be reminded to check your medicine inventory.")
                             .multilineTextAlignment(.center)
                             .foregroundColor(.secondary)
-
+                        Button(action: {
+                            if testReminder {
+                                testReminder = false
+                            } else {
+                                testReminder = true
+                            }
+                        }) {
+                            HStack {
+                                Text("Remind me 10 seconds from now")
+                                    .fontWeight(.medium)
+                                Spacer()
+                                Image(systemName: testReminder ? "checkmark.circle.fill" : "circle")
+                                    .foregroundColor(testReminder ? .green : .gray)
+                            }
+                            .padding()
+                            .background(Color.blue.opacity(0.1))
+                            .cornerRadius(10)
+                        }
                         ForEach([6, 3, 1], id: \.self) { months in
                             Button(action: {
                                 if selectedDurations.contains(months) {
@@ -80,7 +98,7 @@ struct ReminderPickerView: View {
                                 .cornerRadius(10)
                             }
                         }
-
+                        
                         Button("Set Reminders") {
                             for months in selectedDurations {
                                 scheduleGeneralReminder(inMonths: months)
@@ -93,16 +111,19 @@ struct ReminderPickerView: View {
                                 confirmationMessage = "You’ve earned 100 points for your first log!"
                             } else {
                                 confirmationMessage = "Your reminder for this log has been set"
+                                if testReminder {
+                                    scheduleTestNotification()
+                                }
+                                
+                                showConfirmation = true
                             }
-
-                            showConfirmation = true
                         }
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(selectedDurations.isEmpty ? Color.gray.opacity(0.3) : Color.blue)
+                        .background((selectedDurations.isEmpty && !testReminder) ? Color.gray.opacity(0.3) : Color.blue)
                         .foregroundColor(.white)
                         .cornerRadius(10)
-                        .disabled(selectedDurations.isEmpty)
+                        .disabled(selectedDurations.isEmpty && !testReminder)
 
                         Spacer()
                     }
@@ -123,6 +144,7 @@ struct ReminderPickerView: View {
             }
         }
     }
+        
 
     // MARK: - Permissions
 
@@ -192,5 +214,28 @@ struct ReminderPickerView: View {
         } else {
             print("⚠️ Could not calculate future date for \(months) months.")
         }
+    }
+    private func scheduleTestNotification() {
+        print("🧪Test Notification Function Called!")
+        let content = UNMutableNotificationContent()
+        content.title = "🧪 Medicine reminder!"
+        content.body = "If you're seeing this, everything is working 🎉"
+        content.sound = UNNotificationSound.defaultCritical
+        
+        Task{
+            
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+            let uuidString = UUID().uuidString
+            
+            let request = UNNotificationRequest(identifier: uuidString, content: content, trigger: trigger)
+            do{
+                try await UNUserNotificationCenter.current().add(request)
+                print("✅ Test notification scheduled to appear in 10 seconds")
+            }
+            catch{
+                print("❌ Failed to schedule test: \(error.localizedDescription)")
+            }
+        }
+    
     }
 }
