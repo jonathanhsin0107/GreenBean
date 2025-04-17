@@ -59,5 +59,11 @@ class RewardsAlgorithm: ObservableObject {
     private func saveData() {
         UserDefaults.standard.set(totalPoints, forKey: "totalPoints")
         UserDefaults.standard.set(currentBadge, forKey: "currentBadge")
-    }    
+    }
+    
+    func addPoints(_ points: Int) {
+        totalPoints += points
+        updateBadge()
+        saveData()
+    }
 }

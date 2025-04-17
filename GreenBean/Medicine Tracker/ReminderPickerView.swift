@@ -4,7 +4,9 @@ import UserNotifications
 struct ReminderPickerView: View {
     var name: String? = nil
     @Binding var selectedDate: Date
-    @AppStorage("rewardPoints") private var rewardPoints: Int = 0
+    //@AppStorage("rewardPoints") private var rewardPoints: Int = 0
+    @AppStorage("hasLoggedMedicine") private var hasLoggedMedicine: Bool = false
+    @EnvironmentObject var rewardsAlgo: RewardsAlgorithm
 
     @State private var reminderTime = Date()
     @State private var selectedDurations: Set<Int> = []
@@ -34,7 +36,7 @@ struct ReminderPickerView: View {
                         Section {
                             Button("Schedule Reminder") {
                                 scheduleMedicineNotification(medicineName: medicineName)
-                                rewardPoints += 100
+//                                rewardPoints += 100
                                 confirmationMessage = "You’ve earned 100 points for setting a daily reminder for \(medicineName)!"
                                 showConfirmation = true
                             }
@@ -67,7 +69,7 @@ struct ReminderPickerView: View {
                                 }
                             }) {
                                 HStack {
-                                    Text("Remind me \(months) month\(months == 1 ? "" : "s") from now")
+                                    Text("Remind me \(months) month\(months == 1 ? "" : "s") before expiration")
                                         .fontWeight(.medium)
                                     Spacer()
                                     Image(systemName: selectedDurations.contains(months) ? "checkmark.circle.fill" : "circle")
@@ -83,8 +85,16 @@ struct ReminderPickerView: View {
                             for months in selectedDurations {
                                 scheduleGeneralReminder(inMonths: months)
                             }
-                            rewardPoints += 100
-                            confirmationMessage = "You’ve earned 100 points for setting inventory reminders!"
+                            //rewardPoints += 100
+                            //confirmationMessage = "You’ve earned 100 points for setting inventory reminders!"
+                            if !hasLoggedMedicine {
+                                rewardsAlgo.addPoints(100)
+                                hasLoggedMedicine = true
+                                confirmationMessage = "You’ve earned 100 points for your first log!"
+                            } else {
+                                confirmationMessage = "Your reminder for this log has been set"
+                            }
+
                             showConfirmation = true
                         }
                         .padding()
