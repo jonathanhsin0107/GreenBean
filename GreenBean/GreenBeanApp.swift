@@ -11,20 +11,16 @@ import SwiftData
 @main
 struct GreenBeanApp: App {
     init() {
-        createDatabase()  // your existing setup
+        createDatabase()
     }
 
-    @Environment(\.undoManager) var undoManager
     @AppStorage("darkMode") private var darkMode = false
 
-    // Track when the app becomes active
-    @Environment(\.scenePhase) private var scenePhase
-
-    // State for driving the pop‑up
+    // Fun fact alert state
     @State private var showFunFactAlert = false
     @State private var chosenFunFact    = ""
+    @State private var hasShownFunFact  = false
 
-    // All your fun facts in one array
     private let allFunFacts: [String] = [
         "Recycling one aluminum can saves enough energy to run a TV for 3 hours!",
         "A single tree can absorb up to 48 pounds of CO₂ per year!",
@@ -46,25 +42,20 @@ struct GreenBeanApp: App {
                 .preferredColorScheme(darkMode ? .dark : .light)
                 .modelContainer(for: [Product.self], isUndoEnabled: true)
 
-                // Fire on *every* active transition, including the very first launch
-                .onChange(of: scenePhase) { newPhase in
-                    if newPhase == .active {
-                        chosenFunFact = allFunFacts.randomElement()!
+                // Only trigger once when ContentView appears
+                .task {
+                    if !hasShownFunFact {
+                        chosenFunFact = allFunFacts.randomElement() ?? ""
                         showFunFactAlert = true
+                        hasShownFunFact = true
                     }
                 }
 
-                // The global fun‑fact pop‑up
-                .alert(
-                    "🌍 Fun Fact",
-                    isPresented: $showFunFactAlert,
-                    actions: {
-                        Button("Got it!", role: .cancel) { }
-                    },
-                    message: {
-                        Text(chosenFunFact)
-                    }
-                )
+                .alert("🌍 Fun Fact", isPresented: $showFunFactAlert) {
+                    Button("Got it!", role: .cancel) {}
+                } message: {
+                    Text(chosenFunFact)
+                }
         }
     }
 }
