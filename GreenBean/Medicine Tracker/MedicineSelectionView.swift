@@ -157,10 +157,20 @@ struct MedicineSelectionView: View {
                 selectedDate: $selectedDate
             )
         }
+      
+        .onAppear {
+            requestNotificationPermission()
+            
+        }
         .sheet(isPresented: $showReminderSheet) {
             ReminderPickerView(name: selectedMed, selectedDate: $selectedDate)
                 .environmentObject(rewardsAlgo)
         }
+    }
+
+    private func requestNotificationPermission() {
+        UNUserNotificationCenter.current()
+            .requestAuthorization(options: [.alert, .badge, .sound]) { _, _ in }
     }
 
     // MARK: - Helper

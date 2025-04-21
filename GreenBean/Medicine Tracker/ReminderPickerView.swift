@@ -9,32 +9,8 @@ struct ReminderPickerView: View {
     @EnvironmentObject var rewardsAlgo: RewardsAlgorithm
     @AppStorage("hasLoggedMedicine") private var hasLoggedMedicine: Bool = false
 
-    // MARK: — Fun‑fact pools
-    let sustainabilityFacts = [
-        "Did you know? Recycling one aluminum can saves enough energy to run a TV for 3 hours!",
-        "A single tree can absorb up to 48 pounds of carbon dioxide per year!"
-    ]
-    let ecoTips = [
-        "Switch to LED bulbs to save energy and reduce your electricity bill.",
-        "Use reusable shopping bags to help reduce plastic waste!"
-    ]
-    let greenHabits = [
-        "Consider biking or walking instead of driving to reduce your carbon footprint.",
-        "Composting helps reduce food waste and enriches your soil."
-    ]
-    let waterFacts = [
-        "A hot water faucet that leaks one drop per second can add up to 165 gallons a month.",
-        "An energy‑smart washer can save more water in one year than one person drinks in a lifetime."
-    ]
-    let energyFacts = [
-        "Americans consume 26% of the world's energy but make up only 5% of the population.",
-        "A compact fluorescent bulb uses 75% less energy than a regular bulb and can last up to four years."
-    ]
-    let wasteFacts = [
-        "Recycling one ton of paper saves 7,000 gallons of water and three cubic yards of landfill space.",
-        "Over 40% of U.S. municipal waste is paper—about 71.8 tons per year."
-    ]
-
+    
+    
     // MARK: — Toggles & fields
     @State private var enableDaily = false
     @State private var enableExpiration = false
@@ -105,20 +81,6 @@ struct ReminderPickerView: View {
                     }
                 }
 
-                // 5️⃣ Fun Fact Category
-                Section(header: Text("Fun Fact Category")) {
-                    Picker("Choose a category", selection: $selectedCategory) {
-                        ForEach(categories, id: \.self) { Text($0) }
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                }
-
-                // 6️⃣ Always‑visible Fun Fact Preview
-                Section(header: Text("Fun Fact Preview")) {
-                    Text(previewFact)
-                        .italic()
-                        .padding(.vertical, 4)
-                }
 
                 // 7️⃣ Schedule Button
                 Section {
@@ -143,29 +105,9 @@ struct ReminderPickerView: View {
                     }
                 )
             }
-            .onAppear {
-                requestNotificationPermission()
-                updatePreview()
-            }
-            .onChange(of: selectedCategory) { _ in
-                updatePreview()
-            }
         }
     }
 
-    // MARK: — Preview updater
-    private func updatePreview() {
-        let pool: [String]
-        switch selectedCategory {
-        case "Eco Tips":     pool = ecoTips
-        case "Green Habits": pool = greenHabits
-        case "Water":        pool = waterFacts
-        case "Energy":       pool = energyFacts
-        case "Waste":        pool = wasteFacts
-        default:             pool = sustainabilityFacts
-        }
-        previewFact = pool.randomElement() ?? ""
-    }
 
     // MARK: — Schedule all reminders
     private func scheduleAllReminders() {
@@ -182,7 +124,7 @@ struct ReminderPickerView: View {
         }
 
         // Always schedule the fun‑fact notification
-        scheduleFunFactNotification()
+        ///scheduleFunFactNotification()
 
         // Award rewards points
         if !hasLoggedMedicine {
@@ -264,35 +206,6 @@ struct ReminderPickerView: View {
             UNNotificationRequest(identifier: id, content: content, trigger: trigger)
         ) { error in
             if let e = error { print("Expiration schedule error: \(e.localizedDescription)") }
-        }
-    }
-
-    // MARK: — Fun‑fact notification
-    private func scheduleFunFactNotification() {
-        let content = UNMutableNotificationContent()
-        content.title = "🌍 Fun Fact!"
-
-        let pool: [String]
-        switch selectedCategory {
-        case "Eco Tips":     pool = ecoTips
-        case "Green Habits": pool = greenHabits
-        case "Water":        pool = waterFacts
-        case "Energy":       pool = energyFacts
-        case "Waste":        pool = wasteFacts
-        default:             pool = sustainabilityFacts
-        }
-
-        content.body = pool.randomElement() ?? "Did you know that every small action counts in saving the planet?"
-        content.sound = .default
-
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 6 * 3600, repeats: true)
-        let id = "fun_fact_reminder"
-
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])
-        UNUserNotificationCenter.current().add(
-            UNNotificationRequest(identifier: id, content: content, trigger: trigger)
-        ) { error in
-            if let e = error { print("Fun fact schedule error: \(e.localizedDescription)") }
         }
     }
 }
