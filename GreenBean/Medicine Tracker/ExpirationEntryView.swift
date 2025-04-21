@@ -56,8 +56,12 @@ struct ExpirationEntryView: View {
 
             Button("Save Expiration") {
                 saveExpiration()
-                scheduleNotification(for: medicineName, expirationDate: selectedDate)
                 onSaved()
+                
+                // Schedule after state updates
+                DispatchQueue.main.async {
+                    scheduleNotification(for: medicineName, expirationDate: selectedDate)
+                }
             }
             .padding()
             .frame(maxWidth: .infinity)
@@ -87,34 +91,44 @@ struct ExpirationEntryView: View {
             return
         }
 
+        let reminderDate = Calendar.current.date(byAdding: .month, value: -1, to: expirationDate) ?? expirationDate
+        let now = Date()
+
+        guard reminderDate > now else {
+            print("⚠️ Reminder date is in the past — not scheduling.")
+            return
+        }
+
+        let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: reminderDate)
+
         let content = UNMutableNotificationContent()
         content.title = "Reminder for \(medicineName)"
         content.body = "This medicine expires soon — check your inventory!"
         content.sound = .default
 
-        let reminderDate = Calendar.current.date(byAdding: .day, value: -7, to: expirationDate) ?? expirationDate
-        let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: reminderDate)
+        let identifier = "reminder_\(medicineName)"
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
-        let request = UNNotificationRequest(identifier: "reminder_\(medicineName)", content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
 
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
                 print("❌ Notification error: \(error.localizedDescription)")
             } else {
                 print("✅ Reminder scheduled for \(medicineName) on \(reminderDate)")
+                print("🗓️ Expiration date: \(expirationDate)")
+                print("📆 Today is: \(Date())")
             }
         }
     }
 
-
     private func getSavedExpiration() -> Date? {
-        let components = expirationStorage.split(separator: "=")
-        guard components.count == 2, components[0] == medicineName,
-              let timestamp = Double(components[1]) else {
-            return nil
+        if let timestampStr = UserDefaults.standard.string(forKey: "expiration_\(medicineName)"),
+           let timestamp = Double(timestampStr) {
+            return Date(timeIntervalSince1970: timestamp)
         }
-        return Date(timeIntervalSince1970: timestamp)
+        return nil
     }
 
     private func formatted(date: Date) -> String {
@@ -139,4 +153,4 @@ struct ExpirationEntryView: View {
         default: return ""
         }
     }
-} 
+}

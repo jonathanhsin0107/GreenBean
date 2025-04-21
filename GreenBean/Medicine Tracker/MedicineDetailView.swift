@@ -18,8 +18,7 @@ struct MedicineDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-
-                // 🧪 Test Notification Button
+                // Test notification button
                 Button(action: {
                     scheduleTestNotification()
                 }) {
@@ -44,19 +43,18 @@ struct MedicineDetailView: View {
                     ProgressView()
                 }
 
-                // Info section
+                // Medicine info
                 Text(name)
                     .font(.title)
                     .bold()
 
                 Text("💬 General Information")
                     .font(.headline)
-
                 Text(info)
                     .font(.body)
                     .foregroundColor(.secondary)
 
-                // Expiration date
+                // Expiration logging
                 VStack(alignment: .leading, spacing: 12) {
                     Text("📅 Log Expiration Date")
                         .font(.headline)
@@ -67,8 +65,12 @@ struct MedicineDetailView: View {
                     Button("Log Medicine") {
                         savedExpirationDate = formatted(date: selectedDate)
                         UserDefaults.standard.set(savedExpirationDate, forKey: "expiration_\(name)")
-
-                        scheduleReminderBeforeExpiration(medicineName: name, expirationDate: selectedDate, monthsBefore: 1)
+                        // Schedule default 1-month-before reminder
+                        scheduleReminderBeforeExpiration(
+                            medicineName: name,
+                            expirationDate: selectedDate,
+                            monthsBefore: 1
+                        )
 
                         if !storedMedicineString.contains(name) {
                             storedMedicineString += storedMedicineString.isEmpty ? name : "|\(name)"
@@ -91,7 +93,7 @@ struct MedicineDetailView: View {
                 }
                 .padding(.top)
 
-                // Reminders and delete
+                // Reminder and remove log buttons
                 HStack(spacing: 20) {
                     Button {
                         showReminderSheet = true
@@ -129,6 +131,7 @@ struct MedicineDetailView: View {
         .navigationTitle(name)
         .sheet(isPresented: $showReminderSheet) {
             ReminderPickerView(name: name, selectedDate: $selectedDate)
+                .environmentObject(RewardsAlgorithm())
         }
         .alert(isPresented: $showThankYou) {
             Alert(
@@ -147,91 +150,81 @@ struct MedicineDetailView: View {
         }
         .onAppear {
             savedExpirationDate = UserDefaults.standard.string(forKey: "expiration_\(name)") ?? ""
-
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
-                print(granted ? "✅ Permissions granted (onAppear)" : "❌ Permission denied")
+                print(granted ? "✅ Permissions granted" : "❌ Permission denied")
                 if let error = error {
-                    print("❌ Permission error: \(error)")
+                    print("Permission error: \(error.localizedDescription)")
                 }
             }
         }
     }
 
-    // MARK: - Helper Functions
-
-    private func formatted(date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: date)
-    }
-
-    private func removeLog() {
-        let current = storedMedicineString
-            .components(separatedBy: "|")
-            .filter { !$0.isEmpty && $0 != name }
-        storedMedicineString = current.joined(separator: "|")
-        UserDefaults.standard.removeObject(forKey: "expiration_\(name)")
-        savedExpirationDate = ""
-    }
-
-    private func scheduleReminderBeforeExpiration(medicineName: String?, expirationDate: Date, monthsBefore: Int) {
-        guard let medicineName = medicineName, !medicineName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            print("⚠️ Skipping reminder — medicine name is nil or empty")
+    // MARK: - Reminder Scheduling
+    private func scheduleReminderBeforeExpiration(
+        medicineName: String,
+        expirationDate: Date,
+        monthsBefore: Int
+    ) {
+        guard let reminderDate = Calendar.current.date(
+            byAdding: .month,
+            value: -monthsBefore,
+            to: expirationDate
+        ) else {
+            print("⚠️ Could not compute reminderDate")
             return
         }
 
-        print("🧪 Scheduling reminder: \(medicineName) | Exp: \(expirationDate) | \(monthsBefore) months before")
-
-        guard let reminderDate = Calendar.current.date(byAdding: .month, value: -monthsBefore, to: expirationDate) else {
-            print("⚠️ Couldn’t compute reminder date.")
-            return
+        let trigger: UNNotificationTrigger
+        if reminderDate < Date() {
+            // immediate fallback
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        } else {
+            var comps = Calendar.current.dateComponents(
+                [.year, .month, .day, .hour, .minute, .second],
+                from: reminderDate
+            )
+            comps.hour = 9; comps.minute = 0; comps.second = 0
+            trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
         }
-
-        let finalDate = reminderDate < Date() ? Date().addingTimeInterval(5) : reminderDate
 
         let content = UNMutableNotificationContent()
         content.title = "💊 Expiring Soon"
-        content.body = "Your \(medicineName) is expiring in \(monthsBefore) month\(monthsBefore == 1 ? "" : "s"). Check it now!"
+        content.body  = "\(medicineName) expires in \(monthsBefore) month\(monthsBefore>1 ? "s" : "")!"
         content.sound = .default
 
-        let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: finalDate)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+        let identifier = "expire_\(medicineName)_\(monthsBefore)"
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
 
-        let request = UNNotificationRequest(
-            identifier: "expire_\(medicineName)_\(monthsBefore)",
-            content: content,
-            trigger: trigger
-        )
-
-        UNUserNotificationCenter.current().add(request) { error in
+        UNUserNotificationCenter.current().add(
+            UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        ) { error in
             if let error = error {
-                print("❌ Error scheduling: \(error.localizedDescription)")
+                print("❌ Scheduling error: \(error.localizedDescription)")
             } else {
-                print("✅ Reminder scheduled for \(medicineName) at \(finalDate)")
+                print("✅ Scheduled \(identifier) for",
+                      reminderDate < Date() ? "in 5s (test)" : "\(reminderDate)")
             }
-        }
 
-        UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
-            print("🔔 Pending notifications: \(requests.count)")
-            for req in requests {
-                print("• \(req.identifier): \(req.content.title)")
+            // Debug prints
+            UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+                print("🗓 Pending (\(requests.count)):", requests.map(\.identifier))
+            }
+            UNUserNotificationCenter.current().getNotificationSettings { settings in
+                print("🔔 Authorization:", settings.authorizationStatus)
             }
         }
     }
 
     private func scheduleTestNotification() {
-        print("🧪 Test Notification Function Called!")
-
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         UNUserNotificationCenter.current().removeAllDeliveredNotifications()
 
         let content = UNMutableNotificationContent()
         content.title = "🧪 Test Works!"
-        content.body = "If you're seeing this, everything is working 🎉"
-        content.sound = UNNotificationSound.defaultCritical
+        content.body  = "If you're seeing this, everything is working 🎉"
+        content.sound = .defaultCritical
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
-
         let request = UNNotificationRequest(identifier: "test_notification", content: content, trigger: trigger)
 
         UNUserNotificationCenter.current().add(request) { error in
@@ -241,6 +234,21 @@ struct MedicineDetailView: View {
                 print("✅ Test notification scheduled to appear in 5 seconds")
             }
         }
-    
+    }
+
+    private func removeLog() {
+        let current = storedMedicineString
+            .split(separator: "|")
+            .map(String.init)
+            .filter { $0 != name }
+        storedMedicineString = current.joined(separator: "|")
+        UserDefaults.standard.removeObject(forKey: "expiration_\(name)")
+        savedExpirationDate = ""
+    }
+
+    private func formatted(date: Date) -> String {
+        let fmt = DateFormatter()
+        fmt.dateStyle = .medium
+        return fmt.string(from: date)
     }
 }
