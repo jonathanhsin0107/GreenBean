@@ -28,8 +28,8 @@ class RewardsAlgorithm: ObservableObject {
         let basePoints = Int(spent) * pointsPerDollar
         var bonus = 0
 
-        if !hasReceivedFirstPurchaseBonus {
-            bonus += 50
+        if (!hasReceivedFirstPurchaseBonus && spent > 0) {
+            bonus += 70
             hasReceivedFirstPurchaseBonus = true
             UserDefaults.standard.set(true, forKey: "hasReceivedFirstPurchaseBonus")
         }
