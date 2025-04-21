@@ -8,8 +8,6 @@ struct MedicineTrackerView: View {
                     .font(.title)
                     .bold()
 
-                // ✅ Removed points and reward explanation
-
                 NavigationLink(destination: MedicineSelectionView()) {
                     HStack {
                         Image(systemName: "plus.circle.fill")
@@ -34,6 +32,7 @@ struct MedicineTrackerView: View {
                     .cornerRadius(12)
                 }
 
+                // Your sustainability champion note
                 Text("🌿 By reducing medicine wastage, you're helping prevent harmful chemicals from entering our water systems. Thank you for being a sustainability champion!")
                     .font(.footnote)
                     .foregroundColor(.gray)
