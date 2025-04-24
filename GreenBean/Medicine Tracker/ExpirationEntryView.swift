@@ -10,34 +10,14 @@ struct ExpirationEntryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             VStack(spacing: 12) {
-                AsyncImage(url: URL(string: imageURL(for: medicineName))) { phase in
-                    switch phase {
-                    case .empty:
-                        ProgressView()
-                            .frame(width: 150, height: 150)
-                            .background(Color.gray.opacity(0.1))
-                            .cornerRadius(12)
-                            .frame(maxWidth: .infinity)
-                            .padding(.top)
-
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 150)
-                            .cornerRadius(12)
-
-                    case .failure(_):
-                        Image(systemName: "photo.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 100, height: 100)
-                            .foregroundColor(.gray)
-
-                    @unknown default:
-                        EmptyView()
-                    }
-                }
+                // 🌿 ✅ Fixed Local Asset Image!
+                Image(imageName(for: medicineName))
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 150, height: 150)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .shadow(color: .gray.opacity(0.4), radius: 4, x: 2, y: 2)
+                    .padding(.top)
 
                 Text(medicineName)
                     .font(.title2)
@@ -80,11 +60,13 @@ struct ExpirationEntryView: View {
         .navigationTitle("Set Expiration")
     }
 
+    // ✅ Save expiration as timestamp
     private func saveExpiration() {
         let timestamp = selectedDate.timeIntervalSince1970
         UserDefaults.standard.set("\(timestamp)", forKey: "expiration_\(medicineName)")
     }
 
+    // ✅ Schedule a reminder notification
     private func scheduleNotification(for medicineName: String, expirationDate: Date) {
         guard !medicineName.isEmpty else {
             print("⚠️ Skipping notification — medicine name is empty")
@@ -123,6 +105,7 @@ struct ExpirationEntryView: View {
         }
     }
 
+    // ✅ Load saved expiration timestamp
     private func getSavedExpiration() -> Date? {
         if let timestampStr = UserDefaults.standard.string(forKey: "expiration_\(medicineName)"),
            let timestamp = Double(timestampStr) {
@@ -131,26 +114,28 @@ struct ExpirationEntryView: View {
         return nil
     }
 
+    // ✅ Format date to readable string
     private func formatted(date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         return formatter.string(from: date)
     }
 
-    private func imageURL(for medicine: String) -> String {
+    // 🖼️ ✅ Image name for local Assets.xcassets (not URL!)
+    private func imageName(for medicine: String) -> String {
         switch medicine {
-        case "Advil": return "https://m.media-amazon.com/images/I/81-JFc-sotL._AC_UF1000,1000_QL80_.jpg"
-        case "Theraflu": return "https://cdn.discount-drugmart.com/products/images/syndigo/e730a004-f954-4b6f-86cf-13f03864ddf2/600/20b4253e-90c4-4533-a6eb-155c58c99380.jpg"
-        case "Tylenol": return "https://cdn.drugstore2door.com/catalog/product/cache/4c0d23783922484128e316257934ccaf/0/0/00300450449092_1_2.jpg"
-        case "Zyrtec": return "https://cdn.discount-drugmart.com/products/images/syndigo/e730a004-f954-4b6f-86cf-13f03864ddf2/600/3fbe12ba-1d21-4deb-8930-0e61359f2c93.jpg"
-        case "Ibuprofen": return "https://www.associatedbag.com/images/catalog/web266-9-08_400.jpg"
-        case "Pepto Bismol": return "https://m.media-amazon.com/images/I/71nSMz337iL._AC_UF894,1000_QL80_.jpg"
-        case "Claritin": return "https://i5.walmartimages.com/seo/Claritin-24-Hour-Non-Drowsy-Allergy-Medicine-Loratadine-Antihistamine-Tablets-10-Ct_32a6a546-8004-437a-afb2-2294a84f2f8f.f6a05a30e8f5835cd15fd2b00e4771af.jpeg"
-        case "Tums": return "https://cdn.discount-drugmart.com/products/images/syndigo/e730a004-f954-4b6f-86cf-13f03864ddf2/600/167a9533-407e-4a32-90de-f499bfafcad6.jpg"
-        case "Aspirin": return "https://www.aspirin.ca/sites/g/files/vrxlpx30151/files/2021-06/Aspirin-Regular-extra-strength-100ct-carton.png"
-        case "Amoxicillin": return "https://www.poison.org/-/media/images/shared/articles/amoxicillin.jpg"
-        case "Acetaminophen": return "https://athome.medline.com/media/catalog/product/cache/629a5912a555bf7b815eea5423d5ef47/o/t/otc802401_01_1.jpg"
-        default: return ""
+        case "Advil": return "advil_picture"
+        case "Theraflu": return "theraflu_picture"
+        case "Tylenol": return "tylenol_picture"
+        case "Zyrtec": return "zyrtec_picture"
+        case "Ibuprofen": return "ibuprofen_picture"
+        case "Pepto Bismol": return "pepto_bismol_picture"
+        case "Claritin": return "claritin_picture"
+        case "Tums": return "tums_picture"
+        case "Aspirin": return "aspirin_picture"
+        case "Amoxicillin": return "amoxicillin_picture"
+        case "Acetaminophen": return "acetaminophen_picture"
+        default: return "ImageUnavailable" // fallback if no matching image
         }
     }
 }

@@ -27,23 +27,6 @@ struct LoggedMedicinesView: View {
         "Amoxicillin": "Antibiotic used to treat bacterial infections"
     ]
 
-    private func imageURL(for medicine: String) -> String {
-        switch medicine {
-        case "Advil": return "https://m.media-amazon.com/images/I/81-JFc-sotL._AC_UF1000,1000_QL80_.jpg"
-        case "Theraflu": return "https://cdn.discount-drugmart.com/products/images/syndigo/e730a004-f954-4b6f-86cf-13f03864ddf2/600/20b4253e-90c4-4533-a6eb-155c58c99380.jpg"
-        case "Tylenol": return "https://cdn.drugstore2door.com/catalog/product/cache/4c0d23783922484128e316257934ccaf/0/0/00300450449092_1_2.jpg"
-        case "Zyrtec": return "https://cdn.discount-drugmart.com/products/images/syndigo/e730a004-f954-4b6f-86cf-13f03864ddf2/600/3fbe12ba-1d21-4deb-8930-0e61359f2c93.jpg"
-        case "Ibuprofen": return "https://www.associatedbag.com/images/catalog/web266-9-08_400.jpg"
-        case "Pepto Bismol": return "https://m.media-amazon.com/images/I/71nSMz337iL._AC_UF894,1000_QL80_.jpg"
-        case "Claritin": return "https://i5.walmartimages.com/seo/Claritin-24-Hour-Non-Drowsy-Allergy-Medicine-Loratadine-Antihistamine-Tablets-10-Ct_32a6a546-8004-437a-afb2-2294a84f2f8f.f6a05a30e8f5835cd15fd2b00e4771af.jpeg"
-        case "Tums": return "https://cdn.discount-drugmart.com/products/images/syndigo/e730a004-f954-4b6f-86cf-13f03864ddf2/600/167a9533-407e-4a32-90de-f499bfafcad6.jpg"
-        case "Aspirin": return "https://www.aspirin.ca/sites/g/files/vrxlpx30151/files/2021-06/Aspirin-Regular-extra-strength-100ct-carton.png"
-        case "Amoxicillin": return "https://www.poison.org/-/media/images/shared/articles/amoxicillin.jpg"
-        case "Acetaminophen": return "https://athome.medline.com/media/catalog/product/cache/629a5912a555bf7b815eea5423d5ef47/o/t/otc802401_01_1.jpg"
-        default: return ""
-        }
-    }
-
     var body: some View {
         VStack {
             if loggedList.isEmpty {
@@ -54,32 +37,19 @@ struct LoggedMedicinesView: View {
             } else {
                 List {
                     ForEach(loggedList, id: \.self) { med in
-                        HStack(alignment: .top) {
-                            if let saved = loadImage(for: med) {
-                                Image(uiImage: saved)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 50, height: 50)
-                                    .cornerRadius(8)
-                            } else {
-                                AsyncImage(url: URL(string: imageURL(for: med))) { phase in
-                                    if let image = phase.image {
-                                        image
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 50, height: 50)
-                                            .cornerRadius(8)
-                                    } else {
-                                        ProgressView()
-                                            .frame(width: 50, height: 50)
-                                    }
-                                }
-                            }
+                        HStack(alignment: .top, spacing: 12) {
+                            // 🌿 New Image Style: Rounded Rectangle with Shadow
+                            Image(imageName(for: med))
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 80, height: 80)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .shadow(color: .gray.opacity(0.4), radius: 4, x: 2, y: 2)
 
+                            // 💊 Medicine Info
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(med)
                                     .font(.headline)
-
                                 if let desc = medicineDescriptions[med] {
                                     Text(desc)
                                         .font(.caption)
@@ -89,20 +59,10 @@ struct LoggedMedicinesView: View {
 
                             Spacer()
 
-                            VStack(alignment: .trailing, spacing: 2) {
-                                if let date = expirationDate(for: med) {
-                                    let daysLeftString = daysUntilExpiration(from: date)
-                                    let isExpired = daysLeftString.contains("❌") || daysLeftString.contains("⚠️")
-
-                                    Text(daysLeftString)
-                                        .font(.caption2)
-                                        .foregroundColor(isExpired ? .gray : .red)
-                                } else {
-                                    Text("No date")
-                                        .font(.caption2)
-                                        .foregroundColor(.gray)
-                                }
-                            }
+                            // 🗓️ Expiration Status
+                            Text(getExpirationStatus(for: med))
+                                .font(.caption2)
+                                .foregroundColor(.red)
                         }
                         .padding(.vertical, 4)
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
@@ -128,6 +88,7 @@ struct LoggedMedicinesView: View {
         .navigationTitle("Your Logged Medicines")
         .sheet(isPresented: $showCamera) {
             ImagePickerView(sourceType: .camera) { image in
+                // Optional: Remove or replace this part if you are no longer using photo-saving!
                 if let name = selectedMedicineForPhoto {
                     saveImage(image, for: name)
                 }
@@ -135,12 +96,15 @@ struct LoggedMedicinesView: View {
         }
     }
 
-    private func expirationDate(for name: String) -> Date? {
+    // 🌿 Expiration status helper
+    private func getExpirationStatus(for name: String) -> String {
         if let timestampString = UserDefaults.standard.string(forKey: "expiration_\(name)"),
            let timestamp = Double(timestampString) {
-            return Date(timeIntervalSince1970: timestamp)
+            let expirationDate = Date(timeIntervalSince1970: timestamp)
+            return daysUntilExpiration(from: expirationDate)
+        } else {
+            return "No date"
         }
-        return nil
     }
 
     private func daysUntilExpiration(from date: Date) -> String {
@@ -166,21 +130,31 @@ struct LoggedMedicinesView: View {
         let current = loggedList.filter { $0 != name }
         storedMedicineString = current.joined(separator: "|")
         UserDefaults.standard.removeObject(forKey: "expiration_\(name)")
-
-        let path = getDocumentsDirectory().appendingPathComponent("\(name).jpg")
-        try? FileManager.default.removeItem(at: path)
     }
 
+    // 🎨 Image name matching your Assets.xcassets
+    private func imageName(for medicine: String) -> String {
+        switch medicine {
+        case "Advil": return "advil_picture"
+        case "Theraflu": return "theraflu_picture"
+        case "Tylenol": return "tylenol_picture"
+        case "Zyrtec": return "zyrtec_picture"
+        case "Ibuprofen": return "ibuprofen_picture"
+        case "Pepto Bismol": return "pepto_bismol_picture"
+        case "Claritin": return "claritin_picture"
+        case "Tums": return "tums_picture"
+        case "Aspirin": return "aspirin_picture"
+        case "Amoxicillin": return "amoxicillin_picture"
+        case "Acetaminophen": return "acetaminophen_picture"
+        default: return "default_medicine_picture" // fallback image
+        }
+    }
+
+    // 🖼️ Optional: Still here if you're using photos for the "Take Photo" feature
     private func saveImage(_ image: UIImage, for name: String) {
         guard let data = image.jpegData(compressionQuality: 0.8) else { return }
-
         let filename = getDocumentsDirectory().appendingPathComponent("\(name).jpg")
         try? data.write(to: filename)
-    }
-
-    private func loadImage(for name: String) -> UIImage? {
-        let path = getDocumentsDirectory().appendingPathComponent("\(name).jpg")
-        return UIImage(contentsOfFile: path.path)
     }
 
     private func getDocumentsDirectory() -> URL {
