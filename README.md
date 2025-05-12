@@ -1,4 +1,5 @@
 **GreenBean:** Rewards that grow with your sustainable habits
+
 **Authors:** Baibhav Nepal, Bita Jalal, Jonathan Hsin, and Joseph Tran
 
 GreenBean is an app that aims to inspire users to shop sustainably by awarding them virtual reward points for the purchase of sustainable items.
