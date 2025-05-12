@@ -38,7 +38,7 @@ struct LoggedMedicinesView: View {
                 List {
                     ForEach(loggedList, id: \.self) { med in
                         HStack(alignment: .top, spacing: 12) {
-                            // 🌿 New Image Style: Rounded Rectangle with Shadow
+                            // New Image Style: Rounded Rectangle with Shadow
                             Image(imageName(for: med))
                                 .resizable()
                                 .scaledToFill()
@@ -46,7 +46,7 @@ struct LoggedMedicinesView: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                                 .shadow(color: .gray.opacity(0.4), radius: 4, x: 2, y: 2)
 
-                            // 💊 Medicine Info
+                            // Medicine Info
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(med)
                                     .font(.headline)
@@ -59,7 +59,7 @@ struct LoggedMedicinesView: View {
 
                             Spacer()
 
-                            // 🗓️ Expiration Status
+                            // Expiration Status
                             Text(getExpirationStatus(for: med))
                                 .font(.caption2)
                                 .foregroundColor(.red)
@@ -88,7 +88,6 @@ struct LoggedMedicinesView: View {
         .navigationTitle("Your Logged Medicines")
         .sheet(isPresented: $showCamera) {
             ImagePickerView(sourceType: .camera) { image in
-                // Optional: Remove or replace this part if you are no longer using photo-saving!
                 if let name = selectedMedicineForPhoto {
                     saveImage(image, for: name)
                 }
@@ -96,7 +95,7 @@ struct LoggedMedicinesView: View {
         }
     }
 
-    // 🌿 Expiration status helper
+    // Expiration status helper
     private func getExpirationStatus(for name: String) -> String {
         if let timestampString = UserDefaults.standard.string(forKey: "expiration_\(name)"),
            let timestamp = Double(timestampString) {
@@ -132,7 +131,7 @@ struct LoggedMedicinesView: View {
         UserDefaults.standard.removeObject(forKey: "expiration_\(name)")
     }
 
-    // 🎨 Image name matching your Assets.xcassets
+    // Image name matching your Assets.xcassets
     private func imageName(for medicine: String) -> String {
         switch medicine {
         case "Advil": return "advil_picture"
@@ -150,7 +149,6 @@ struct LoggedMedicinesView: View {
         }
     }
 
-    // 🖼️ Optional: Still here if you're using photos for the "Take Photo" feature
     private func saveImage(_ image: UIImage, for name: String) {
         guard let data = image.jpegData(compressionQuality: 0.8) else { return }
         let filename = getDocumentsDirectory().appendingPathComponent("\(name).jpg")
