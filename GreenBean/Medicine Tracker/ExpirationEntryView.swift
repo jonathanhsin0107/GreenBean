@@ -10,7 +10,6 @@ struct ExpirationEntryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             VStack(spacing: 12) {
-                // 🌿 ✅ Fixed Local Asset Image!
                 Image(imageName(for: medicineName))
                     .resizable()
                     .scaledToFill()
@@ -53,20 +52,18 @@ struct ExpirationEntryView: View {
                     .font(.subheadline)
                     .foregroundColor(.gray)
             }
-
             Spacer()
         }
         .padding()
         .navigationTitle("Set Expiration")
     }
 
-    // ✅ Save expiration as timestamp
-    private func saveExpiration() {
+    private func saveExpiration() {     // Save expiration as timestamp
         let timestamp = selectedDate.timeIntervalSince1970
         UserDefaults.standard.set("\(timestamp)", forKey: "expiration_\(medicineName)")
     }
 
-    // ✅ Schedule a reminder notification
+    // Schedule a reminder notification
     private func scheduleNotification(for medicineName: String, expirationDate: Date) {
         guard !medicineName.isEmpty else {
             print("⚠️ Skipping notification — medicine name is empty")
@@ -75,22 +72,20 @@ struct ExpirationEntryView: View {
 
         let reminderDate = Calendar.current.date(byAdding: .month, value: -1, to: expirationDate) ?? expirationDate
         let now = Date()
-
         guard reminderDate > now else {
             print("⚠️ Reminder date is in the past — not scheduling.")
             return
         }
 
         let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: reminderDate)
-
         let content = UNMutableNotificationContent()
+        
         content.title = "Reminder for \(medicineName)"
         content.body = "This medicine expires soon — check your inventory!"
         content.sound = .default
 
         let identifier = "reminder_\(medicineName)"
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
-
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
 
@@ -105,8 +100,7 @@ struct ExpirationEntryView: View {
         }
     }
 
-    // ✅ Load saved expiration timestamp
-    private func getSavedExpiration() -> Date? {
+    private func getSavedExpiration() -> Date? {        // Load saved expiration timestamp
         if let timestampStr = UserDefaults.standard.string(forKey: "expiration_\(medicineName)"),
            let timestamp = Double(timestampStr) {
             return Date(timeIntervalSince1970: timestamp)
@@ -114,14 +108,12 @@ struct ExpirationEntryView: View {
         return nil
     }
 
-    // ✅ Format date to readable string
-    private func formatted(date: Date) -> String {
+    private func formatted(date: Date) -> String {        // Format date to readable string
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         return formatter.string(from: date)
     }
 
-    // 🖼️ ✅ Image name for local Assets.xcassets (not URL!)
     private func imageName(for medicine: String) -> String {
         switch medicine {
         case "Advil": return "advil_picture"
