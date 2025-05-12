@@ -258,6 +258,7 @@ struct ScanReceipt: View {
                         tempProductsList.append(currProduct)
                         switch currProduct.name{
                             case "NPR CF EX LR BRN EGG" : tempValidDollars += currProduct.price
+                            case "EB ORG LRG BROWN EGG" : tempValidDollars += currProduct.price
                             default : tempValidDollars += 0.0
                         }
                     }   //End of for loop

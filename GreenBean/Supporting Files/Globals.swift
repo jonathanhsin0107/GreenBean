@@ -16,7 +16,7 @@ import Foundation
 let veryfiHeaders = [
     "Content-Type": "application/json",
     "Accept": "application/json",
-    "CLIENT-ID": "vrfnuclXflVYaj1TEK4lpyhEuafyO4T1LlWpOvH",
-    "AUTHORIZATION": "apikey jonathanhsin0107:4b3e798d0a57dc3a2ff803ad579f7153",
+    "CLIENT-ID": "vrfRlXoSHo6OIwSxt0rhNA2zYnhK5mynNUDYk2h",
+    "AUTHORIZATION": "apikey baibhav:4a921fb3a5c04470fc150ae2239282bf",
 ]
 let veryfiEndpoint="https://api.veryfi.com/api/v8/partner/documents"

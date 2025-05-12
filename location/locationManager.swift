@@ -14,7 +14,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let locationManager = CLLocationManager()
     
     private let stores: [String: CLLocation] = [
-        "Food Lion": CLLocation(latitude: 37.2296, longitude: -80.4139),
+        "Food Lion": CLLocation(latitude: 37.217018, longitude: -80.454643),
         "Kroger": CLLocation(latitude: 37.1296, longitude: -80.4112)
     ]
     
@@ -37,7 +37,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private func updateNearestStore(userLocation: CLLocation) {
         for (storeName, storeLocation) in stores {
             let distance = userLocation.distance(from: storeLocation)
-            if distance < 50 {
+            if distance < 100 {
                 currentStore = storeName
                 return
             }
