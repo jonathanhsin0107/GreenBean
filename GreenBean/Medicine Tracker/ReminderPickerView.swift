@@ -4,14 +4,11 @@ import UserNotifications
 struct ReminderPickerView: View {
     let name: String
     @Binding var selectedDate: Date
-
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var rewardsAlgo: RewardsAlgorithm
     @AppStorage("hasLoggedMedicine") private var hasLoggedMedicine: Bool = false
-
     
-    
-    // MARK: — Toggles & fields
+    // Toggles & fields
     @State private var enableDaily = false
     @State private var enableExpiration = false
     @State private var enableInterval = false
@@ -21,26 +18,26 @@ struct ReminderPickerView: View {
     @State private var selectedInterval: Int = 3
     let timeIntervals = [3, 6, 8, 10]
 
-    // MARK: — Category & preview
+    // Category & preview
     @State private var selectedCategory = "Sustainability Facts"
     let categories = ["Sustainability Facts", "Eco Tips", "Green Habits", "Water", "Energy", "Waste"]
     @State private var previewFact: String = ""
 
-    // MARK: — Confirmation alert
+    // Confirmation alert
     @State private var showConfirmation = false
     @State private var confirmationMessage = ""
 
     var body: some View {
         NavigationView {
             Form {
-                // 1️⃣ Reminder toggles
+                // Reminder toggles
                 Section(header: Text("Which reminders would you like?")) {
                     Toggle("Daily medication reminder", isOn: $enableDaily)
                     Toggle("Expiration-based reminders", isOn: $enableExpiration)
                     Toggle("Reminder every few hours", isOn: $enableInterval)
                 }
 
-                // 2️⃣ Daily Reminder
+                // Daily Reminder
                 if enableDaily {
                     Section(header: Text("Daily Reminder")) {
                         Text("Medicine: \(name)")
@@ -51,7 +48,7 @@ struct ReminderPickerView: View {
                     }
                 }
 
-                // 3️⃣ Expiration Reminders
+                // Expiration Reminders
                 if enableExpiration {
                     Section(header: Text("Expiration Reminders")) {
                         ForEach([1, 3, 6], id: \.self) { months in
@@ -69,7 +66,7 @@ struct ReminderPickerView: View {
                     }
                 }
 
-                // 4️⃣ Interval Reminders
+                // Interval Reminders
                 if enableInterval {
                     Section(header: Text("Interval Reminders")) {
                         Picker("Select interval", selection: $selectedInterval) {
@@ -82,7 +79,7 @@ struct ReminderPickerView: View {
                 }
 
 
-                // 7️⃣ Schedule Button
+                // Schedule Button
                 Section {
                     Button("Schedule Reminders", action: scheduleAllReminders)
                         .frame(maxWidth: .infinity)
@@ -109,7 +106,7 @@ struct ReminderPickerView: View {
     }
 
 
-    // MARK: — Schedule all reminders
+    // Schedule all reminders
     private func scheduleAllReminders() {
         if enableDaily {
             scheduleDailyReminder()
@@ -137,13 +134,13 @@ struct ReminderPickerView: View {
         showConfirmation = true
     }
 
-    // MARK: — Notification permission
+    // Notification permission
     private func requestNotificationPermission() {
         UNUserNotificationCenter.current()
             .requestAuthorization(options: [.alert, .badge, .sound]) { _, _ in }
     }
 
-    // MARK: — Daily reminder
+    // Daily reminder
     private func scheduleDailyReminder() {
         let content = UNMutableNotificationContent()
         content.title = "💊 Time to take \(name)"
@@ -162,7 +159,7 @@ struct ReminderPickerView: View {
         }
     }
 
-    // MARK: — Interval reminder
+    // Interval reminder
     private func scheduleIntervalReminder(interval: Int) {
         let content = UNMutableNotificationContent()
         content.title = "💊 Time to take \(name)"
@@ -180,13 +177,14 @@ struct ReminderPickerView: View {
         }
     }
 
-    // MARK: — Expiration reminder
+    // Expiration reminder
     private func scheduleExpirationReminder(monthsBefore: Int) {
         guard let reminderDate = Calendar.current.date(
             byAdding: .month, value: -monthsBefore, to: selectedDate
         ) else { return }
 
         let trigger: UNNotificationTrigger
+        
         if reminderDate < Date() {
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
         } else {
